@@ -1,0 +1,76 @@
+# Get all pilots (users)
+GET http://localhost:9080/aviation/api/pilots/
+
+###
+
+# Add new pilot
+PUT http://localhost:9080/aviation/api/pilots/962ad41d-f371-4892-b472-5fcbff45d357
+Content-Type: application/json
+
+{
+    "pilotName": "Olaf Brolan",
+    "role": "MAJOR"
+}
+
+###
+
+# Delete pilot by id
+DELETE http://localhost:9080/aviation/api/pilots/cb7057a8-ff08-430a-a909-fdc84f177db3
+
+###
+
+# Get pilot by id
+GET http://localhost:9080/aviation/api/pilots/8c9ccdaa-c35f-496a-8e6b-d44a25e83be9
+
+###
+
+# Update pilot by id
+PATCH http://localhost:9080/aviation/api/pilots/8c9ccdaa-c35f-496a-8e6b-d44a25e83be9
+Content-Type: application/json
+
+{
+    "pilotName": "Andrzej Powietrzny",
+    "role": "CAPTAIN"
+}
+
+###
+
+# Get pilot by id (not found)
+GET http://localhost:9080/aviation/api/pilots/62207543-fb75-4aad-9f76-56d02af20602
+
+###
+
+# Get pilot avatar (not existing)
+GET http://localhost:9080/aviation/api/pilots/8c9ccdaa-c35f-496a-8e6b-d44a25e83be9/avatar
+
+###
+
+# Add an avatar to a pilot
+PUT http://localhost:9080/aviation/api/pilots/8c9ccdaa-c35f-496a-8e6b-d44a25e83be9/avatar
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="fotapilota.png"
+
+< src\main\resources\org\example\configuration\avatar\fotapilota.png
+--boundary--
+
+###
+
+# Update the avatar of a pilot
+PUT http://localhost:9080/aviation/api/pilots/8c9ccdaa-c35f-496a-8e6b-d44a25e83be9/avatar
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="fotapilota2.png"
+
+< src\main\resources\org\example\configuration\avatar\fotapilota2.png
+--boundary--
+
+###
+
+# Delete avatar of a pilot
+DELETE http://localhost:9080/aviation/api/pilots/8c9ccdaa-c35f-496a-8e6b-d44a25e83be9/avatar
+
+
+
