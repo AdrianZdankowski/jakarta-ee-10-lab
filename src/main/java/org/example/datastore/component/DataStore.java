@@ -59,4 +59,67 @@ public class DataStore {
             throw new IllegalArgumentException("The pilot with id \"%s\" does not exist".formatted(id));
         }
     }
+
+    public synchronized List<PlaneType> findAllPlaneTypes() {
+        return planeTypes.stream()
+                .map(cloningUtility::clone)
+                .collect(Collectors.toList());
+    }
+
+    public synchronized void createPlaneType(PlaneType value) throws IllegalArgumentException{
+        if (planeTypes.stream().anyMatch(planeType -> planeType.getId().equals(value.getId()))) {
+            throw new IllegalArgumentException("Plane type with id \"%s\" already exists".formatted(value.getId()));
+        }
+        planeTypes.add(cloningUtility.clone(value));
+    }
+
+    public synchronized List<Airplane> findAllAirplanes() {
+        return airplanes.stream()
+                .map(cloningUtility::clone)
+                .collect(Collectors.toList());
+    }
+
+    public synchronized void createAirplane(Airplane value) throws IllegalArgumentException {
+        if (airplanes.stream().anyMatch(airplane -> airplane.getId().equals(value.getId()))) {
+            throw new IllegalArgumentException("Airplane with id \"%s\" already exists".formatted(value.getId()));
+        }
+        Airplane entity = cloneWithRelationships(value);
+        airplanes.add(entity);
+    }
+
+    public synchronized void updateAirplane(Airplane value) throws IllegalArgumentException {
+        Airplane entity = cloneWithRelationships(value);
+        if (airplanes.removeIf(airplane -> airplane.getId().equals(value.getId()))) {
+            airplanes.add(entity);
+        }
+        else {
+            throw new IllegalArgumentException("Airplane with id \"%s\" does not exist".formatted(value.getId()));
+        }
+    }
+
+    public synchronized void deleteAirplane(UUID id) throws IllegalArgumentException {
+        if (!airplanes.removeIf(airplane -> airplane.getId().equals(id))) {
+            throw new IllegalArgumentException("Airplane with id \"%s\" does not exist".formatted(id));
+        }
+    }
+
+    private Airplane cloneWithRelationships(Airplane value) {
+        Airplane entity = cloningUtility.clone(value);
+
+        if (entity.getPilot() != null) {
+            entity.setPilot(pilots.stream()
+                    .filter(pilot -> pilot.getId().equals(value.getPilot().getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No pilot with id \"%s\".".formatted(value.getPilot().getId()))));
+        }
+
+        if (entity.getPlaneType() != null) {
+            entity.setPlaneType(planeTypes.stream()
+                    .filter(planeType -> planeType.getId().equals(value.getPlaneType().getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No plane type with id \"%s\".".formatted(value.getPlaneType().getId()))));
+        }
+
+        return entity;
+    }
 }

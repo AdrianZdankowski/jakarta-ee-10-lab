@@ -21,10 +21,6 @@ public class Pilot implements Serializable {
     private String pilotName;
     private LocalDate accountCreationDate;
     private PilotRank role;
-    @ToString.Exclude
-    private List<Airplane> airplanes;
 //    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private byte[] avatar;
-
+//    private List<Airplane> airplanes;
 }
