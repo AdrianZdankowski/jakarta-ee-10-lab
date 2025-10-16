@@ -1,5 +1,6 @@
 package org.example.controller.servlet;
 
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -36,10 +37,9 @@ public class ApiServlet extends HttpServlet {
     }
 
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        pilotController = (PilotController) getServletContext().getAttribute("pilotController");
+    @Inject
+    public ApiServlet(PilotController pilotController) {
+        this.pilotController = pilotController;
     }
 
     @Override

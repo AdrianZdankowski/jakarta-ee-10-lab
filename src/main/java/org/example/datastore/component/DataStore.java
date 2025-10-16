@@ -1,5 +1,9 @@
 package org.example.datastore.component;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 import org.example.airplane.entity.Airplane;
 import org.example.airplane.entity.PlaneType;
 import org.example.pilot.entity.Pilot;
@@ -11,6 +15,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Log
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class DataStore {
     private final Set<PlaneType> planeTypes = new HashSet<>();
 
@@ -20,6 +27,7 @@ public class DataStore {
 
     private final CloningUtility cloningUtility;
 
+    @Inject
     public DataStore(CloningUtility cloningUtility) {
         this.cloningUtility = cloningUtility;
     }
