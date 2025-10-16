@@ -31,14 +31,12 @@ public class PlaneTypeService {
     public void create(PlaneType planeType) {
         repository.create(planeType);
     }
-
-    // TODO: IMPLEMENT THIS IN REPO
+    
     public void delete(PlaneType entity) {
-
+        repository.delete(entity);
     }
 
-    // TODO: IMPLEMENT THIS IN REPO
     public void update(PlaneType entity) {
-
+        repository.update(entity);
     }
 }

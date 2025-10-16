@@ -66,11 +66,55 @@ public class DataStore {
                 .collect(Collectors.toList());
     }
 
-    public synchronized void createPlaneType(PlaneType value) throws IllegalArgumentException{
+    public synchronized void createPlaneType(PlaneType value) throws IllegalArgumentException {
         if (planeTypes.stream().anyMatch(planeType -> planeType.getId().equals(value.getId()))) {
             throw new IllegalArgumentException("Plane type with id \"%s\" already exists".formatted(value.getId()));
         }
         planeTypes.add(cloningUtility.clone(value));
+    }
+
+    public synchronized void updatePlaneType(PlaneType value) throws IllegalArgumentException {
+        PlaneType existingType = planeTypes.stream()
+                .filter(pt -> pt.getId().equals(value.getId()))
+                .findFirst()
+                .orElseThrow(()-> new IllegalArgumentException(
+                        "PlaneType with id \"%s\" does not exist".formatted(value.getId())
+                        ));
+
+        existingType.setName(value.getName());
+        existingType.setNumberOfEngines(value.getNumberOfEngines());
+        existingType.setWeight(value.getWeight());
+
+        airplanes.stream()
+                .filter(airplane -> airplane.getPlaneType() != null &&
+                        airplane.getPlaneType().getId().equals(existingType.getId()))
+                .forEach(airplane -> airplane.setPlaneType(existingType));
+
+        // TODO: Czy na pewno potrzebne?
+        List<Airplane> relatedAirplanes = airplanes.stream()
+                .filter(airplane -> airplane.getPlaneType() != null &&
+                        airplane.getPlaneType().getId().equals(existingType.getId()))
+                .collect(Collectors.toList());
+        existingType.setAirplanes(relatedAirplanes);
+    }
+
+    public synchronized void deletePlaneType(PlaneType planeType) throws IllegalArgumentException {
+        if (!planeTypes.removeIf(pt -> pt.getId().equals(planeType.getId()))) {
+            throw new IllegalArgumentException("PlaneType with id \"%s\" does not exist".formatted(planeType.getId()));
+        }
+
+        List<Airplane> planesToRemove = airplanes.stream()
+                .filter(airplane -> airplane.getPlaneType() != null &&
+                        airplane.getPlaneType().getId().equals(planeType.getId()))
+                .toList();
+
+        airplanes.removeAll(planesToRemove);
+
+        for (Pilot pilot : pilots) {
+            if (pilot.getAirplanes() != null) {
+                pilot.getAirplanes().removeIf(planesToRemove::contains);
+            }
+        }
     }
 
     public synchronized List<Airplane> findAllAirplanes() {

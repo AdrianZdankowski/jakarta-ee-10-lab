@@ -40,12 +40,12 @@ public class PlaneTypeInMemoryRepository implements PlaneTypeRepository {
     // TODO: IMPLEMENT THIS
     @Override
     public void delete(PlaneType entity) {
-        throw new UnsupportedOperationException("Operation not implemented.");
+        store.deletePlaneType(entity);
     }
 
     // TODO: IMPLEMENT THIS
     @Override
     public void update(PlaneType entity) {
-        throw new UnsupportedOperationException("Operation not implemented.");
+        store.updatePlaneType(entity);
     }
 }
