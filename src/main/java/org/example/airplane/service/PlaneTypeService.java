@@ -31,7 +31,7 @@ public class PlaneTypeService {
     public void create(PlaneType planeType) {
         repository.create(planeType);
     }
-    
+
     public void delete(PlaneType entity) {
         repository.delete(entity);
     }
