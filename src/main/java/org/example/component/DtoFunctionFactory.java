@@ -49,12 +49,10 @@ public class DtoFunctionFactory {
         return new PlaneTypesToResponseFunction();
     }
 
-    // TODO: MIGHT DELETE THIS
     public RequestToPlaneTypeFunction requestToPlaneType() {
         return new RequestToPlaneTypeFunction();
     }
 
-    // TODO: MIGHT DELETE THIS
     public UpdatePlaneTypeWithRequestFunction updatePlaneType() {
         return new UpdatePlaneTypeWithRequestFunction();
     }

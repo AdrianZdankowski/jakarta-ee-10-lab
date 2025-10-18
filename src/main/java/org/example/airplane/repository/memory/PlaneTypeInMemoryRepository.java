@@ -37,13 +37,11 @@ public class PlaneTypeInMemoryRepository implements PlaneTypeRepository {
         store.createPlaneType(entity);
     }
 
-    // TODO: IMPLEMENT THIS
     @Override
     public void delete(PlaneType entity) {
         store.deletePlaneType(entity.getId());
     }
 
-    // TODO: IMPLEMENT THIS
     @Override
     public void update(PlaneType entity) {
         store.updatePlaneType(entity);
