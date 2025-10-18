@@ -44,7 +44,7 @@ Content-Type: application/json
     "yearOfProduction": 2025,
     "flightHours": 160,
     "planeType": "63d6f249-48ab-4d71-85bb-34ed3bd1a748",
-    "pilot": "39afa67e-1728-4050-8327-0cd92e715565",
+    "pilot": "39afa67e-1728-4050-8327-0cd92e715565"
 }
 
 ###
@@ -58,3 +58,42 @@ Content-Type: application/json
     "numberOfEngines": 1,
     "weight": 0.5
 }
+
+###
+
+# Update airplane
+PATCH  http://localhost:9080/aviation/api/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+Content-Type: application/json
+
+{
+    "name": "Eurofighter typhoon",
+    "yearOfProduction": 2018,
+    "flightHours": 785
+}
+
+###
+
+# Update planetype
+PATCH http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+Content-Type: application/json
+
+{
+    "name": "Training",
+    "numberOfEngines": 1,
+    "weight": 0.5
+}
+
+###
+
+# Delete airplane
+DELETE  http://localhost:9080/aviation/api/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+
+###
+
+# Delete plane type
+DELETE http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+
+###
+
+# Delete plane type with airplanes in it
+DELETE http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748

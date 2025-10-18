@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.airplane.controller.api.AirplaneController;
 import org.example.airplane.controller.api.PlaneTypeController;
+import org.example.airplane.dto.PatchAirplaneRequest;
+import org.example.airplane.dto.PatchPlaneTypeRequest;
 import org.example.airplane.dto.PutAirplaneRequest;
 import org.example.airplane.dto.PutPlaneTypeRequest;
 import org.example.pilot.controller.api.PilotController;
@@ -179,6 +181,16 @@ public class ApiServlet extends HttpServlet {
                 pilotController.deletePilotAvatar(uuid);
                 return;
             }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                airplaneController.deleteAirplane(uuid);
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                planeTypeController.deletePlaneType(uuid);
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
@@ -191,6 +203,16 @@ public class ApiServlet extends HttpServlet {
             if (path.matches(Patterns.PILOT.pattern())) {
                 UUID uuid = extractUuid(Patterns.PILOT, path);
                 pilotController.patchPilot(uuid, jsonb.fromJson(request.getReader(), PatchPilotRequest.class));
+                return;
+            }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                airplaneController.patchAirplane(uuid, jsonb.fromJson(request.getReader(), PatchAirplaneRequest.class));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                planeTypeController.patchPlaneType(uuid, jsonb.fromJson(request.getReader(), PatchPlaneTypeRequest.class));
                 return;
             }
         }

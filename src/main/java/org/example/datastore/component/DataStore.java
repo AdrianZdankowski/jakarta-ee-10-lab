@@ -90,7 +90,6 @@ public class DataStore {
                         airplane.getPlaneType().getId().equals(existingType.getId()))
                 .forEach(airplane -> airplane.setPlaneType(existingType));
 
-        // TODO: Czy na pewno potrzebne?
         List<Airplane> relatedAirplanes = airplanes.stream()
                 .filter(airplane -> airplane.getPlaneType() != null &&
                         airplane.getPlaneType().getId().equals(existingType.getId()))
