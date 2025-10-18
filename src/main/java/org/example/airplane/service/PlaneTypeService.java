@@ -32,8 +32,8 @@ public class PlaneTypeService {
         repository.create(planeType);
     }
 
-    public void delete(PlaneType entity) {
-        repository.delete(entity);
+    public void delete(UUID id) {
+        repository.delete(repository.find(id).orElseThrow());
     }
 
     public void update(PlaneType entity) {

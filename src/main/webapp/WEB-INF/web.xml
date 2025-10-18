@@ -19,7 +19,7 @@
 
     <context-param>
         <param-name>avatarDirectory</param-name>
-        <param-value>avatars</param-value>
+        <param-value>C:\Users\Adrian\Desktop\Studia\SEMESTR7\JAVA\Lab1\aviation\avatars</param-value>
     </context-param>
 
 </web-app>

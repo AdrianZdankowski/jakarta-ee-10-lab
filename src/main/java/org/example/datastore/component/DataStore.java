@@ -98,14 +98,14 @@ public class DataStore {
         existingType.setAirplanes(relatedAirplanes);
     }
 
-    public synchronized void deletePlaneType(PlaneType planeType) throws IllegalArgumentException {
-        if (!planeTypes.removeIf(pt -> pt.getId().equals(planeType.getId()))) {
-            throw new IllegalArgumentException("PlaneType with id \"%s\" does not exist".formatted(planeType.getId()));
+    public synchronized void deletePlaneType(UUID id) throws IllegalArgumentException {
+        if (!planeTypes.removeIf(pt -> pt.getId().equals(id))) {
+            throw new IllegalArgumentException("PlaneType with id \"%s\" does not exist".formatted(id));
         }
 
         List<Airplane> planesToRemove = airplanes.stream()
                 .filter(airplane -> airplane.getPlaneType() != null &&
-                        airplane.getPlaneType().getId().equals(planeType.getId()))
+                        airplane.getPlaneType().getId().equals(id))
                 .toList();
 
         airplanes.removeAll(planesToRemove);

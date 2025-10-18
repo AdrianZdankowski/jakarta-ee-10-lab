@@ -40,7 +40,7 @@ public class PlaneTypeInMemoryRepository implements PlaneTypeRepository {
     // TODO: IMPLEMENT THIS
     @Override
     public void delete(PlaneType entity) {
-        store.deletePlaneType(entity);
+        store.deletePlaneType(entity.getId());
     }
 
     // TODO: IMPLEMENT THIS

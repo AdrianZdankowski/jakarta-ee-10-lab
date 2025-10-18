@@ -48,6 +48,15 @@ public class PilotService {
     }
 
     public void delete(UUID id) {
+        try {
+            deleteAvatar(id);
+        }
+        catch (NotFoundException ex) {
+            System.out.println("No avatar found for pilot " + id + ". Continuing with pilot deletion.");
+        }
+        catch (IllegalArgumentException ex) {
+
+        }
         repository.delete(repository.find(id).orElseThrow());
     }
 
