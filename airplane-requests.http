@@ -1,0 +1,33 @@
+# Get all airplanes
+
+GET http://localhost:9080/aviation/api/airplanes
+
+###
+
+# Get single airplane
+
+GET http://localhost:9080/aviation/api/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
+
+###
+
+# Get all plane types
+
+GET http://localhost:9080/aviation/api/planetypes
+
+###
+
+# Get single plane type
+
+GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748
+
+###
+
+# Get all plane type airplanes
+
+GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes
+
+###
+
+# Get all pilots airplanes
+
+GET http://localhost:9080/aviation/api/pilots/39afa67e-1728-4050-8327-0cd92e715565/airplanes

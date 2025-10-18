@@ -143,7 +143,7 @@ public class InitializedData {
 
         Airplane c130 = Airplane.builder()
                 .id(UUID.fromString("681bc221-0a21-4f3e-a726-6cebac04b210"))
-                .name("Airbus A320")
+                .name("C-130 Hercules")
                 .yearOfProduction(1995)
                 .flightHours(24542)
                 .planeType(transportAircraft)
