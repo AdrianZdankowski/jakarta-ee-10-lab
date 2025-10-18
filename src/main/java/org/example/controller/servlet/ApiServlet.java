@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.airplane.controller.api.AirplaneController;
 import org.example.airplane.controller.api.PlaneTypeController;
+import org.example.airplane.dto.PutAirplaneRequest;
+import org.example.airplane.dto.PutPlaneTypeRequest;
 import org.example.pilot.controller.api.PilotController;
 import org.example.pilot.dto.PatchPilotRequest;
 import org.example.pilot.dto.PutPilotRequest;
@@ -144,6 +146,18 @@ public class ApiServlet extends HttpServlet {
             else if (path.matches(Patterns.PILOT_AVATAR.pattern())) {
                 UUID uuid = extractUuid(Patterns.PILOT_AVATAR, path);
                 pilotController.putPilotAvatar(uuid, request.getPart("avatar").getInputStream());
+                return;
+            }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                airplaneController.putAirplane(uuid, jsonb.fromJson(request.getReader(), PutAirplaneRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.API, "airplanes", uuid.toString()));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                planeTypeController.putPlaneType(uuid, jsonb.fromJson(request.getReader(), PutPlaneTypeRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.API, "planetypes", uuid.toString()));
                 return;
             }
         }

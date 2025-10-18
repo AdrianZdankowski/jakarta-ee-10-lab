@@ -16,4 +16,5 @@ public class PutAirplaneRequest {
     private int yearOfProduction;
     private int flightHours;
     private UUID planeType;
+    private UUID pilot;
 }
