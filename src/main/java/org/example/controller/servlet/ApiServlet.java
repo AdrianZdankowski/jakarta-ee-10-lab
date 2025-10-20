@@ -1,5 +1,6 @@
 package org.example.controller.servlet;
 
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.airplane.controller.api.AirplaneController;
+import org.example.airplane.controller.api.PlaneTypeController;
+import org.example.airplane.dto.PatchAirplaneRequest;
+import org.example.airplane.dto.PatchPlaneTypeRequest;
+import org.example.airplane.dto.PutAirplaneRequest;
+import org.example.airplane.dto.PutPlaneTypeRequest;
 import org.example.pilot.controller.api.PilotController;
 import org.example.pilot.dto.PatchPilotRequest;
 import org.example.pilot.dto.PutPilotRequest;
@@ -21,7 +28,9 @@ import java.util.regex.Pattern;
 @MultipartConfig(maxFileSize = 500 * 1024)
 public class ApiServlet extends HttpServlet {
 
-    private PilotController pilotController;
+    private final PilotController pilotController;
+    private final AirplaneController airplaneController;
+    private final PlaneTypeController planeTypeController;
     private final Jsonb jsonb = JsonbBuilder.create();
     public static final class Paths {
         public static final String API = "/api";
@@ -30,16 +39,25 @@ public class ApiServlet extends HttpServlet {
     public static final class Patterns {
 
         private static final Pattern UUID = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
-        private static final Pattern PILOTS = Pattern.compile("/pilots/?");
-        private static final Pattern PILOT = Pattern.compile("/pilots/(%s)".formatted(UUID.pattern()));
-        private static final Pattern PILOT_AVATAR = Pattern.compile("/pilots/(%s)/avatar".formatted(UUID.pattern()));
+        public static final Pattern PILOTS = Pattern.compile("/pilots/?");
+        public static final Pattern PILOT = Pattern.compile("/pilots/(%s)".formatted(UUID.pattern()));
+        public static final Pattern PILOT_AVATAR = Pattern.compile("/pilots/(%s)/avatar".formatted(UUID.pattern()));
+        public static final Pattern PLANETYPES = Pattern.compile("/planetypes/?");
+        public static final Pattern PLANETYPE = Pattern.compile("/planetypes/(%s)".formatted(UUID.pattern()));
+        public static final Pattern PLANETYPE_AIRPLANES = Pattern.compile("/planetypes/(%s)/airplanes/?".formatted(UUID.pattern()));
+        public static final Pattern PILOT_AIRPLANES = Pattern.compile("/pilots/(%s)/airplanes/?".formatted(UUID.pattern()));
+        public static final Pattern AIRPLANES = Pattern.compile("/airplanes/?");
+        public static final Pattern AIRPLANE = Pattern.compile("/airplanes/(%s)".formatted(UUID.pattern()));
     }
 
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        pilotController = (PilotController) getServletContext().getAttribute("pilotController");
+    @Inject
+    public ApiServlet(PilotController pilotController,
+                      AirplaneController airplaneController,
+                      PlaneTypeController planeTypeController) {
+        this.pilotController = pilotController;
+        this.airplaneController = airplaneController;
+        this.planeTypeController = planeTypeController;
     }
 
     @Override
@@ -78,6 +96,40 @@ public class ApiServlet extends HttpServlet {
                 response.getOutputStream().write(avatar);
                 return;
             }
+            else if (path.matches(Patterns.AIRPLANES.pattern())) {
+                response.setContentType("application/json");
+                response.getWriter().write(jsonb.toJson(airplaneController.getAirplanes()));
+                return;
+            }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                response.getWriter().write(jsonb.toJson(airplaneController.getAirplane(uuid)));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPES.pattern())) {
+                response.setContentType("application/json");
+                response.getWriter().write(jsonb.toJson(planeTypeController.getPlaneTypes()));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                response.getWriter().write(jsonb.toJson(planeTypeController.getPlaneType(uuid)));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE_AIRPLANES.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(Patterns.PLANETYPE_AIRPLANES, path);
+                response.getWriter().write(jsonb.toJson(airplaneController.getPlaneTypeAirplanes(uuid)));
+                return;
+            }
+            else if (path.matches(Patterns.PILOT_AIRPLANES.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(Patterns.PILOT_AIRPLANES, path);
+                response.getWriter().write(jsonb.toJson(airplaneController.getPilotAirplanes(uuid)));
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
@@ -96,6 +148,18 @@ public class ApiServlet extends HttpServlet {
             else if (path.matches(Patterns.PILOT_AVATAR.pattern())) {
                 UUID uuid = extractUuid(Patterns.PILOT_AVATAR, path);
                 pilotController.putPilotAvatar(uuid, request.getPart("avatar").getInputStream());
+                return;
+            }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                airplaneController.putAirplane(uuid, jsonb.fromJson(request.getReader(), PutAirplaneRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.API, "airplanes", uuid.toString()));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                planeTypeController.putPlaneType(uuid, jsonb.fromJson(request.getReader(), PutPlaneTypeRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.API, "planetypes", uuid.toString()));
                 return;
             }
         }
@@ -117,6 +181,16 @@ public class ApiServlet extends HttpServlet {
                 pilotController.deletePilotAvatar(uuid);
                 return;
             }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                airplaneController.deleteAirplane(uuid);
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                planeTypeController.deletePlaneType(uuid);
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
@@ -129,6 +203,16 @@ public class ApiServlet extends HttpServlet {
             if (path.matches(Patterns.PILOT.pattern())) {
                 UUID uuid = extractUuid(Patterns.PILOT, path);
                 pilotController.patchPilot(uuid, jsonb.fromJson(request.getReader(), PatchPilotRequest.class));
+                return;
+            }
+            else if (path.matches(Patterns.AIRPLANE.pattern())) {
+                UUID uuid = extractUuid(Patterns.AIRPLANE, path);
+                airplaneController.patchAirplane(uuid, jsonb.fromJson(request.getReader(), PatchAirplaneRequest.class));
+                return;
+            }
+            else if (path.matches(Patterns.PLANETYPE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PLANETYPE, path);
+                planeTypeController.patchPlaneType(uuid, jsonb.fromJson(request.getReader(), PatchPlaneTypeRequest.class));
                 return;
             }
         }

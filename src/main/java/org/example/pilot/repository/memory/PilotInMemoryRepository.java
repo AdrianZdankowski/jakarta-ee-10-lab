@@ -1,16 +1,21 @@
 package org.example.pilot.repository.memory;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import org.example.datastore.component.DataStore;
 import org.example.pilot.entity.Pilot;
 import org.example.pilot.repository.api.PilotRepository;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestScoped
 public class PilotInMemoryRepository implements PilotRepository {
     private final DataStore store;
 
+    @Inject
     public PilotInMemoryRepository(DataStore store) {
         this.store = store;
     }

@@ -1,7 +1,11 @@
 package org.example.datastore.component;
 
-import jakarta.servlet.FilterChain;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
+import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,23 +17,29 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+@Log
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class AvatarStore {
-    private final Path avatarDirectory;
 
-    public AvatarStore(ServletContext context) {
+    @Inject
+    private ServletContext context;
+    private Path avatarDirectory;
+
+    @PostConstruct
+    private void init() {
         String dirPath = context.getInitParameter("avatarDirectory");
         if (dirPath == null || dirPath.isBlank()) {
-//            throw new IllegalStateException("No init param 'avatarDirectory'");
             dirPath = Paths.get(System.getProperty("user.dir"), "avatars").toString();
         }
         else if (!Paths.get(dirPath).isAbsolute()) {
             dirPath = Paths.get(System.getProperty("user.dir")).resolve(dirPath).toString();
         }
 
-        this.avatarDirectory = Paths.get(dirPath);
+        avatarDirectory = Paths.get(dirPath);
         try {
             Files.createDirectories(avatarDirectory);
-            System.out.println("Avatar directory set to: " + avatarDirectory.toAbsolutePath());
+            System.out.println("[AVATAR] Avatar directory set to: " + avatarDirectory.toAbsolutePath());
         } catch (IOException ex) {
             throw new UncheckedIOException("Could not create avatar directory", ex);
         }
@@ -50,6 +60,9 @@ public class AvatarStore {
 
     public void deleteAvatar(UUID id) throws IOException {
         Path file = avatarDirectory.resolve(id + ".png");
+        if (!Files.exists(file)) {
+            throw new FileNotFoundException("Avatar file not found.");
+        }
         Files.deleteIfExists(file);
     }
 }

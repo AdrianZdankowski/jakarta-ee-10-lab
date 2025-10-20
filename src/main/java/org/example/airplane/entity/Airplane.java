@@ -18,6 +18,7 @@ public class Airplane implements Serializable {
     private String name;
     private int yearOfProduction;
     private int flightHours;
+    @ToString.Exclude
     private PlaneType planeType;
     @ToString.Exclude
     private Pilot pilot;
