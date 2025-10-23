@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{planeTypeView.id}" required="true" />
+        <f:event type="preRenderView" listener="#{planeTypeView.init()}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="planetype" name="css/planetype_view.css"/>
+
+        <article>
+            <header><h2>Plane Type Details</h2></header>
+
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputText value="Name:"/>
+                <h:outputText value="#{planeTypeView.planeType.name}"/>
+
+                <h:outputText value="Number of engines:"/>
+                <h:outputText value="#{planeTypeView.planeType.numberOfEngines}"/>
+
+                <h:outputText value="Weight:"/>
+                <h:outputText value="#{planeTypeView.planeType.weight}"/>
+            </h:panelGrid>
+
+            <h3>Airplanes of this type:</h3>
+            <h:dataTable value="#{planeTypeView.planeType.airplanes}" var="airplane"
+                         styleClass="table table-striped table-hover">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{airplane.name}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Year of production</f:facet>
+                    <h:outputText value="#{airplane.yearOfProduction}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Flight hours</f:facet>
+                    <h:outputText value="#{airplane.flightHours}"/>
+                </h:column>
+            </h:dataTable>
+
+            <h:link styleClass="btn btn-secondary mt-3" outcome="/planetype/planetype_list.xhtml"
+                    value="Back to list"/>
+        </article>
+    </ui:define>
+</ui:composition>
