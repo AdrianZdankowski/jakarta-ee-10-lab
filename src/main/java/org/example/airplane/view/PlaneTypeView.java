@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.airplane.entity.PlaneType;
 import org.example.airplane.model.PlaneTypeModel;
+import org.example.airplane.model.PlaneTypesModel;
 import org.example.airplane.service.AirplaneService;
 import org.example.airplane.service.PlaneTypeService;
 import org.example.component.ModelFunctionFactory;
@@ -61,4 +62,10 @@ public class PlaneTypeView implements Serializable {
                     .responseSendError(HttpServletResponse.SC_NOT_FOUND, "Plane type not found");
         }
     }
+
+    public String deleteAirplane(UUID id) {
+        airplaneService.delete(id);
+        return "planetype_view?faces-redirect=true&amp;id=" + planeType.getId();
+    }
+
 }

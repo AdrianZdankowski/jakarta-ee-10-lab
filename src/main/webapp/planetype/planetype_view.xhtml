@@ -44,6 +44,16 @@
                     <f:facet name="header">Flight hours</f:facet>
                     <h:outputText value="#{airplane.flightHours}"/>
                 </h:column>
+
+                <h:column>
+                    <f:facet name="header">Delete</f:facet>
+                    <h:form>
+                        <h:commandButton value="Delete"
+                                         styleClass="btn"
+                                         action="#{planeTypeView.deleteAirplane(airplane.id)}">
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
             </h:dataTable>
 
             <h:link styleClass="btn btn-secondary mt-3" outcome="/planetype/planetype_list.xhtml"
