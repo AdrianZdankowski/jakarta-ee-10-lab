@@ -36,13 +36,10 @@
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Year of production</f:facet>
-                    <h:outputText value="#{airplane.yearOfProduction}"/>
-                </h:column>
-
-                <h:column>
-                    <f:facet name="header">Flight hours</f:facet>
-                    <h:outputText value="#{airplane.flightHours}"/>
+                    <f:facet name="header">View</f:facet>
+                    <h:link value="View" outcome="/airplane/airplane_view.xhtml">
+                        <f:param name="id" value="#{airplane.id}" />
+                    </h:link>
                 </h:column>
 
                 <h:column>

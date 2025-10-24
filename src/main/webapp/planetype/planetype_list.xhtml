@@ -26,13 +26,6 @@
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Edit</f:facet>
-                    <h:link outcome="/planetype/planetype_edit.xhtml" value="Edit">
-                        <f:param name="id" value="#{planeType.id}"/>
-                    </h:link>
-                </h:column>
-
-                <h:column>
                     <f:facet name="header">Delete</f:facet>
                     <h:form>
                         <h:commandButton styleClass="btn" value="Delete"
@@ -40,10 +33,6 @@
                     </h:form>
                 </h:column>
 
-                <f:facet name="footer">
-                    <h:button styleClass="btn" outcome="/planetype/planetype_create.xhtml"
-                              value="Create new plane type"/>
-                </f:facet>
             </h:dataTable>
         </article>
     </ui:define>
