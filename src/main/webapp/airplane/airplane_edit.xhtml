@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <!-- Parametr ID samolotu + wywołanie init() -->
+    <f:metadata>
+        <f:viewParam name="id" value="#{airplaneEdit.id}" required="true"/>
+        <f:event type="preRenderView" listener="#{airplaneEdit.init}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="airplane" name="css/airplane_edit.css"/>
+
+        <article>
+            <header><h2>Edit Airplane</h2></header>
+
+            <h:form styleClass="form">
+
+                <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
+
+                    <h:outputLabel value="ID:"/>
+                    <h:outputText value="#{airplaneEdit.airplane.id}"/>
+
+                    <h:outputLabel for="name" value="Name:"/>
+                    <h:inputText id="name"
+                                 value="#{airplaneEdit.airplane.name}"
+                                 required="true"/>
+
+                    <h:outputLabel for="year" value="Year of Production:"/>
+                    <h:inputText id="year"
+                                 value="#{airplaneEdit.airplane.yearOfProduction}"
+                                 required="true"/>
+
+                    <h:outputLabel for="hours" value="Flight Hours:"/>
+                    <h:inputText id="hours"
+                                 value="#{airplaneEdit.airplane.flightHours}"
+                                 required="true"/>
+
+                    <h:outputLabel for="type" value="Plane Type:"/>
+                    <h:outputText id="type" value="#{airplaneEdit.planeType.name}"/>
+
+                </h:panelGrid>
+
+                <h:panelGroup layout="block" styleClass="form-footer mt-3">
+                    <h:commandButton value="Save"
+                                     action="#{airplaneEdit.saveAction}"
+                                     styleClass="btn btn-primary"/>
+                    <h:link value="Cancel"
+                            outcome="/planetype/planetype_view.xhtml"
+                            styleClass="btn btn-secondary ms-2">
+                        <f:param name="id" value="#{airplaneEdit.planeType.id}" />
+                    </h:link>
+                </h:panelGroup>
+
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

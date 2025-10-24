@@ -1,9 +1,7 @@
 package org.example.component;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import org.example.airplane.model.function.AirplaneToModelFunction;
-import org.example.airplane.model.function.PlaneTypeToModelFunction;
-import org.example.airplane.model.function.PlaneTypesToModelFunction;
+import org.example.airplane.model.function.*;
 
 @ApplicationScoped
 public class ModelFunctionFactory {
@@ -18,5 +16,17 @@ public class ModelFunctionFactory {
 
     public PlaneTypeToModelFunction planeTypeToModel() {
         return new PlaneTypeToModelFunction(airplaneToModel());
+    }
+
+    public AirplaneToEditModelFunction airplaneToEditModel() {
+        return new AirplaneToEditModelFunction();
+    }
+
+    public ModelToAirplaneFunction modelToAirplane() {
+        return new ModelToAirplaneFunction();
+    }
+
+    public UpdateAirplaneWIthModelFunction updateAirplane() {
+        return new UpdateAirplaneWIthModelFunction();
     }
 }

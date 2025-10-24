@@ -43,6 +43,13 @@
                 </h:column>
 
                 <h:column>
+                    <f:facet name="header">Edit</f:facet>
+                    <h:link value="Edit" outcome="/airplane/airplane_edit.xhtml">
+                        <f:param name="id" value="#{airplane.id}" />
+                    </h:link>
+                </h:column>
+
+                <h:column>
                     <f:facet name="header">Delete</f:facet>
                     <h:form>
                         <h:commandButton value="Delete"
@@ -51,10 +58,17 @@
                         </h:commandButton>
                     </h:form>
                 </h:column>
+
+                <f:facet name="footer">
+                    <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
+                              value="Back to list"/>
+
+                    <h:button styleClass="btn" outcome="/airplane/airplane_create.xhtml"
+                              value="Create new airplane"/>
+                </f:facet>
+
             </h:dataTable>
 
-            <h:link styleClass="btn btn-secondary mt-3" outcome="/planetype/planetype_list.xhtml"
-                    value="Back to list"/>
         </article>
     </ui:define>
 </ui:composition>

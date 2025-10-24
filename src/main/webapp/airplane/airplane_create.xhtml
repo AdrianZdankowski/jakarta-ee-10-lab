@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{airplaneCreate.init()}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="airplane" name="css/airplane_create.css"/>
+
+        <article>
+            <header><h2>Add New Airplane</h2></header>
+
+            <h:form styleClass="form">
+
+                <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
+
+                    <h:outputLabel for="name" value="Name:"/>
+                    <h:inputText id="name" value="#{airplaneCreate.airplane.name}" required="true"/>
+
+                    <h:outputLabel for="year" value="Year of Production:"/>
+                    <h:inputText id="year" value="#{airplaneCreate.airplane.yearOfProduction}" required="true"/>
+
+                    <h:outputLabel for="hours" value="Flight Hours:"/>
+                    <h:inputText id="hours" value="#{airplaneCreate.airplane.flightHours}" required="true"/>
+
+                    <h:outputLabel for="type" value="Plane Type:"/>
+                    <h:selectOneMenu id="type"
+                                     value="#{airplaneCreate.airplane.planeType}"
+                                     required="true">
+                        <f:selectItem itemLabel="-- Select Plane Type --" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{airplaneCreate.planeTypes}"
+                                       var="type"
+                                       itemLabel="#{type.name}"
+                                       itemValue="#{type}"/>
+                    </h:selectOneMenu>
+
+                </h:panelGrid>
+
+                <h:panelGroup layout="block" styleClass="form-footer mt-3">
+                    <h:commandButton value="Save"
+                                     action="#{airplaneCreate.saveAction}"
+                                     styleClass="btn btn-primary"/>
+                    <h:button value="Cancel"
+                              outcome="/planetype/planetype_list.xhtml"
+                              styleClass="btn btn-secondary ms-2"/>
+                </h:panelGroup>
+
+            </h:form>
+        </article>
+    </ui:define>
+</ui:composition>
