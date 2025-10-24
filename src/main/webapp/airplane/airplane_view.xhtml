@@ -11,7 +11,6 @@
     </f:metadata>
 
     <ui:define name="content">
-        <h:outputStylesheet library="airplane" name="css/airplane_view.css"/>
 
         <article>
             <header><h2>Airplane Details</h2></header>
@@ -29,6 +28,19 @@
                 <h:outputText value="Plane Type:"/>
                 <h:outputText value="#{airplaneView.airplane.planeType}"/>
             </h:panelGrid>
+
+            <f:facet name="footer">
+                <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
+                          value="Back to list"/>
+
+                <h:button styleClass="btn" outcome="/airplane/airplane_create.xhtml"
+                          value="Create new airplane"/>
+            </f:facet>
+
+            <h:panelGroup layout="block" styleClass="form-footer mt-3">
+                <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
+                          value="Back to list"/>
+            </h:panelGroup>
 
         </article>
     </ui:define>
