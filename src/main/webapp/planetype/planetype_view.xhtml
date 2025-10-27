@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{planeTypeView.id}" required="true" />
+        <f:event type="preRenderView" listener="#{planeTypeView.init()}" />
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <article>
+            <header><h2>Plane Type Details</h2></header>
+
+            <h:panelGrid columns="2" columnClasses="label,value">
+                <h:outputText value="Name:"/>
+                <h:outputText value="#{planeTypeView.planeType.name}"/>
+
+                <h:outputText value="Number of engines:"/>
+                <h:outputText value="#{planeTypeView.planeType.numberOfEngines}"/>
+
+                <h:outputText value="Weight:"/>
+                <h:outputText value="#{planeTypeView.planeType.weight}"/>
+            </h:panelGrid>
+
+            <h3>Airplanes of this type:</h3>
+            <h:dataTable value="#{planeTypeView.planeType.airplanes}" var="airplane"
+                         styleClass="table table-striped table-hover">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{airplane.name}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">View</f:facet>
+                    <h:link value="View" outcome="/airplane/airplane_view.xhtml">
+                        <f:param name="id" value="#{airplane.id}" />
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Edit</f:facet>
+                    <h:link value="Edit" outcome="/airplane/airplane_edit.xhtml">
+                        <f:param name="id" value="#{airplane.id}" />
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Delete</f:facet>
+                    <h:form>
+                        <h:commandButton value="Delete"
+                                         styleClass="btn"
+                                         action="#{planeTypeView.deleteAirplane(airplane.id)}">
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+
+                <f:facet name="footer">
+                    <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
+                              value="Back to list"/>
+
+                    <h:button styleClass="btn" outcome="/airplane/airplane_create.xhtml"
+                              value="Create new airplane"/>
+                </f:facet>
+
+            </h:dataTable>
+
+        </article>
+    </ui:define>
+</ui:composition>
