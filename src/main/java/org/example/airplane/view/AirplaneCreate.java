@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.airplane.entity.Airplane;
 import org.example.airplane.model.AirplaneCreateModel;
 import org.example.airplane.model.PlaneTypeModel;
 import org.example.airplane.service.AirplaneService;
@@ -50,7 +51,9 @@ public class AirplaneCreate implements Serializable {
     }
 
     public String saveAction() {
-        airplaneService.create(factory.modelToAirplane().apply(airplane));
-        return "/planetype/planetype_list.xhtml?faces-redirect=true";
+        Airplane entity = factory.modelToAirplane().apply(airplane);
+        airplaneService.create(entity);
+        UUID planeTypeId = entity.getPlaneType().getId();
+        return "/planetype/planetype_view.xhtml?faces-redirect=true&amp;id=" + planeTypeId;
     }
 }

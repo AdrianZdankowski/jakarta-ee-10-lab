@@ -39,7 +39,6 @@ public class AirplaneEdit implements Serializable {
     public AirplaneEdit(AirplaneService airplaneService,
                         ModelFunctionFactory factory) {
         this.airplaneService = airplaneService;
-//        this.planeTypeService = planeTypeService;
         this.factory = factory;
     }
 
