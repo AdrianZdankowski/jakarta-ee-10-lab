@@ -3,6 +3,8 @@ package org.example.airplane.controller.simple;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 import org.example.airplane.controller.api.AirplaneController;
 import org.example.airplane.dto.GetAirplaneResponse;
 import org.example.airplane.dto.GetAirplanesResponse;
@@ -10,8 +12,6 @@ import org.example.airplane.dto.PatchAirplaneRequest;
 import org.example.airplane.dto.PutAirplaneRequest;
 import org.example.airplane.service.AirplaneService;
 import org.example.component.DtoFunctionFactory;
-import org.example.controller.servlet.exception.BadRequestException;
-import org.example.controller.servlet.exception.NotFoundException;
 
 import java.util.UUID;
 

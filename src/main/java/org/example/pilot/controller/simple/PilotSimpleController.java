@@ -2,9 +2,9 @@ package org.example.pilot.controller.simple;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 import org.example.component.DtoFunctionFactory;
-import org.example.controller.servlet.exception.BadRequestException;
-import org.example.controller.servlet.exception.NotFoundException;
 import org.example.pilot.controller.api.PilotController;
 import org.example.pilot.dto.GetPilotResponse;
 import org.example.pilot.dto.GetPilotsResponse;

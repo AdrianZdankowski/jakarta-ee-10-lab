@@ -1,0 +1,40 @@
+# Get all plane types
+
+GET http://localhost:9080/aviation/api/planetypes
+
+###
+
+# Get single plane type
+
+GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748
+
+###
+
+# Create new plane type
+PUT http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+Content-Type: application/json
+
+{
+    "name": "Amateur",
+    "numberOfEngines": 1,
+    "weight": 0.5
+}
+
+###
+
+# Update planetype
+PATCH http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+Content-Type: application/json
+
+{
+    "name": "Training",
+    "numberOfEngines": 1,
+    "weight": 0.5
+}
+
+###
+
+# Delete plane type
+DELETE http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+
+###
