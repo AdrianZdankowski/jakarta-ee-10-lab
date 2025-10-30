@@ -1,10 +1,9 @@
-package org.example.airplane.controller.simple;
+package org.example.airplane.controller.rest;
 
-
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Path;
 import org.example.airplane.controller.api.AirplaneController;
 import org.example.airplane.dto.GetAirplaneResponse;
 import org.example.airplane.dto.GetAirplanesResponse;
@@ -15,17 +14,18 @@ import org.example.component.DtoFunctionFactory;
 
 import java.util.UUID;
 
-@RequestScoped
-public class AirplaneSimpleController implements AirplaneController {
+@Path("")
+public class AirplaneRestController implements AirplaneController {
 
     private final AirplaneService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public AirplaneSimpleController(AirplaneService service, DtoFunctionFactory factory) {
+    public AirplaneRestController(AirplaneService service, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;
     }
+
     @Override
     public GetAirplanesResponse getAirplanes() {
         return factory.airplanesToResponse().apply(service.findAll());
