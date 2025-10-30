@@ -21,3 +21,34 @@ GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3b
 GET http://localhost:9080/aviation/api/pilots/39afa67e-1728-4050-8327-0cd92e715565/airplanes
 
 ###
+
+# Create new airplane
+
+PUT http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+Content-Type: application/json
+
+{
+    "name": "SU-57 Felon",
+    "yearOfProduction": 2025,
+    "flightHours": 160,
+    "pilot": "39afa67e-1728-4050-8327-0cd92e715565"
+}
+
+###
+
+# Update airplane
+PATCH  http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+Content-Type: application/json
+
+{
+    "name": "Eurofighter typhoon",
+    "yearOfProduction": 2018,
+    "flightHours": 785
+}
+
+###
+
+# Delete airplane
+DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/681bc221-0a21-4f3e-a726-6cebac04b210
+
+###

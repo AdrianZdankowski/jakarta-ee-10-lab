@@ -1,10 +1,8 @@
 package org.example.airplane.controller.api;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.example.airplane.dto.GetAirplaneResponse;
 import org.example.airplane.dto.GetAirplanesResponse;
 import org.example.airplane.dto.PatchAirplaneRequest;
@@ -35,9 +33,17 @@ public interface AirplaneController {
     @Produces(MediaType.APPLICATION_JSON)
     GetAirplaneResponse getAirplane(@PathParam("id") UUID id);
 
-    void putAirplane(UUID id, PutAirplaneRequest request);
+    @PUT
+    @Path("/planetypes/{typeId}/airplanes/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response putAirplane(@PathParam("typeId") UUID typeId, @PathParam("id") UUID id, PutAirplaneRequest request);
 
-    void patchAirplane(UUID id, PatchAirplaneRequest request);
+    @PATCH
+    @Path("/planetypes/{typeId}/airplanes/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response patchAirplane(@PathParam("id") UUID id, PatchAirplaneRequest request, @PathParam("typeId") UUID typeId);
 
-    void deleteAirplane(UUID id);
+    @DELETE
+    @Path("/planetypes/airplanes/{id}")
+    Response deleteAirplane(@PathParam("id") UUID id);
 }
