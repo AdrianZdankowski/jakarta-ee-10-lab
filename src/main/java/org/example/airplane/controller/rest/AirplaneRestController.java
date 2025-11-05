@@ -1,8 +1,10 @@
-package org.example.airplane.controller.simple;
+package org.example.airplane.controller.rest;
 
-
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import org.example.airplane.controller.api.AirplaneController;
 import org.example.airplane.dto.GetAirplaneResponse;
 import org.example.airplane.dto.GetAirplanesResponse;
@@ -10,22 +12,22 @@ import org.example.airplane.dto.PatchAirplaneRequest;
 import org.example.airplane.dto.PutAirplaneRequest;
 import org.example.airplane.service.AirplaneService;
 import org.example.component.DtoFunctionFactory;
-import org.example.controller.servlet.exception.BadRequestException;
-import org.example.controller.servlet.exception.NotFoundException;
 
+import java.net.URI;
 import java.util.UUID;
 
-@RequestScoped
-public class AirplaneSimpleController implements AirplaneController {
+@Path("")
+public class AirplaneRestController implements AirplaneController {
 
     private final AirplaneService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public AirplaneSimpleController(AirplaneService service, DtoFunctionFactory factory) {
+    public AirplaneRestController(AirplaneService service, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;
     }
+
     @Override
     public GetAirplanesResponse getAirplanes() {
         return factory.airplanesToResponse().apply(service.findAll());
@@ -53,31 +55,38 @@ public class AirplaneSimpleController implements AirplaneController {
     }
 
     @Override
-    public void putAirplane(UUID id, PutAirplaneRequest request) {
+    public Response putAirplane(UUID typeId, UUID id, PutAirplaneRequest request) {
         try {
-            service.create(factory.requestToAirplane().apply(id, request));
+            boolean exists = service.find(id).isPresent();
+
+            if (!exists) {
+                service.create(factory.requestToAirplane().apply(typeId, id, request));
+                return Response.created(URI.create(String.format("/api/planetypes/%s/airplanes/%s", typeId, id)))
+                        .build();
+            }
+            else {
+                return Response.noContent().build();
+            }
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException(ex);
         }
     }
 
     @Override
-    public void patchAirplane(UUID id, PatchAirplaneRequest request) {
-        service.find(id).ifPresentOrElse(
-                entity -> service.update(factory.updateAirplane().apply(entity, request)),
-                () -> {
-                    throw new NotFoundException("Airplane with id %s not found".formatted(id));
-                }
-        );
+    public Response patchAirplane(UUID id, PatchAirplaneRequest request, UUID typeId) {
+        return service.find(id).map(entity -> {
+            service.update(factory.updateAirplane().apply(entity, request, typeId));
+            return Response.ok().build();
+        })
+                .orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
     }
 
     @Override
-    public void deleteAirplane(UUID id) {
-        service.find(id).ifPresentOrElse(
-                entity -> service.delete(id),
-                () -> {
-                    throw new NotFoundException("Airplane with id %s not found".formatted(id));
-                }
-        );
+    public Response deleteAirplane(UUID id) {
+        return service.find(id).map(entity -> {
+            service.delete(id);
+            return Response.ok().build();
+        })
+                .orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
     }
 }

@@ -2,8 +2,8 @@ package org.example.pilot.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
-import org.example.controller.servlet.exception.NotFoundException;
 import org.example.datastore.component.AvatarStore;
 import org.example.pilot.entity.Pilot;
 import org.example.pilot.repository.api.PilotRepository;
