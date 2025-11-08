@@ -2,8 +2,10 @@ package org.example.airplane.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import org.example.airplane.entity.Airplane;
+import org.example.airplane.entity.PlaneType;
 import org.example.airplane.repository.api.AirplaneRepository;
 import org.example.airplane.repository.api.PlaneTypeRepository;
 import org.example.pilot.entity.Pilot;
@@ -46,16 +48,40 @@ public class AirplaneService {
         return airplaneRepository.findAllByPilot(pilot);
     }
 
+    @Transactional
     public void create(Airplane airplane) {
+        if (airplaneRepository.find(airplane.getId()).isPresent()) {
+            throw new IllegalArgumentException("Airplane already exists.");
+        }
+
+        PlaneType planeType = planeTypeRepository.find(airplane.getPlaneType().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Plane type does not exists."));
+        Pilot pilot = pilotRepository.find(airplane.getPilot().getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Pilot does not exists."));
+
+        airplane.setPlaneType(planeType);
+        airplane.setPilot(pilot);
+
         airplaneRepository.create(airplane);
+
+        planeType.getAirplanes().add(airplane);
+        pilot.getAirplanes().add(airplane);
     }
 
+    @Transactional
     public void update(Airplane airplane) {
         airplaneRepository.update(airplane);
     }
 
+    @Transactional
     public void delete(UUID id) {
-        airplaneRepository.delete(airplaneRepository.find(id).orElseThrow());
+        Airplane airplane = airplaneRepository.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("Airplane not found."));
+
+        airplane.getPlaneType().getAirplanes().remove(airplane);
+        airplane.getPilot().getAirplanes().remove(airplane);
+
+        airplaneRepository.delete(airplane);
     }
 
     public Optional<List<Airplane>> findAllByPlaneType(UUID id) {
