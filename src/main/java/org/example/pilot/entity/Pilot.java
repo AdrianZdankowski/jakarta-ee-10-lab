@@ -28,5 +28,6 @@ public class Pilot implements Serializable {
 
     @OneToMany(mappedBy = "pilot", fetch = FetchType.LAZY)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Airplane> airplanes;
 }

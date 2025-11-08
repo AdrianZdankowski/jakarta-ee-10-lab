@@ -26,5 +26,6 @@ public class PlaneType implements Serializable {
 
     @OneToMany(mappedBy = "planeType", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Airplane> airplanes;
 }

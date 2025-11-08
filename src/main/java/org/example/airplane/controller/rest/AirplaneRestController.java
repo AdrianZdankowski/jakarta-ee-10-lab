@@ -1,6 +1,7 @@
 package org.example.airplane.controller.rest;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
@@ -67,26 +68,41 @@ public class AirplaneRestController implements AirplaneController {
             else {
                 return Response.noContent().build();
             }
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex);
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
     }
 
     @Override
     public Response patchAirplane(UUID id, PatchAirplaneRequest request, UUID typeId) {
-        return service.find(id).map(entity -> {
-            service.update(factory.updateAirplane().apply(entity, request, typeId));
-            return Response.ok().build();
-        })
-                .orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
+        try {
+            return service.find(id).map(entity -> {
+                service.update(factory.updateAirplane().apply(entity, request, typeId));
+                return Response.ok().build();
+            }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex);
+            }
+            throw ex;
+        }
     }
 
     @Override
     public Response deleteAirplane(UUID id) {
-        return service.find(id).map(entity -> {
-            service.delete(id);
-            return Response.ok().build();
-        })
-                .orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
+        try {
+            return service.find(id).map(entity -> {
+                service.delete(id);
+                return Response.ok().build();
+            }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex);
+            }
+            throw ex;
+        }
     }
 }
