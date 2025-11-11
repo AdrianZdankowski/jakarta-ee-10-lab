@@ -1,5 +1,6 @@
 package org.example.pilot.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.airplane.entity.Airplane;
@@ -16,11 +17,17 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
+@Entity
+@Table(name = "pilots")
 public class Pilot implements Serializable {
+    @Id
     private UUID id;
     private String pilotName;
     private LocalDate accountCreationDate;
     private PilotRank role;
+
+    @OneToMany(mappedBy = "pilot", fetch = FetchType.LAZY)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Airplane> airplanes;
 }

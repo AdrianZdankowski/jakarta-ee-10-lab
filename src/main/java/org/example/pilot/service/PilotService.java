@@ -2,6 +2,7 @@ package org.example.pilot.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
 import org.example.datastore.component.AvatarStore;
@@ -39,6 +40,7 @@ public class PilotService {
         return repository.findAll();
     }
 
+    @Transactional
     public void create(Pilot pilot) {
         repository.create(pilot);
     }

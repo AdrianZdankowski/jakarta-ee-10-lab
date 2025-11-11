@@ -1,6 +1,7 @@
 package org.example.airplane.controller.rest;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
@@ -47,35 +48,49 @@ public class PlaneTypeRestController implements PlaneTypeController {
     public Response putPlaneType(UUID id, PutPlaneTypeRequest request) {
         try {
             boolean exists = service.find(id).isPresent();
-            service.create(factory.requestToPlaneType().apply(id, request));
 
-            if (!exists) {
-                return Response.created(URI.create("/api/planetypes/" +id)).build();
+            if (exists) {
+                service.update(factory.requestToPlaneType().apply(id, request));
+                return Response.ok().build();
+            } else {
+                service.create(factory.requestToPlaneType().apply(id, request));
+                return Response.created(URI.create("/api/planetypes/" + id)).build();
             }
-            else {
-                return Response.noContent().build();
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex);
             }
-        }
-        catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex);
+            throw ex;
         }
     }
 
     @Override
     public Response patchPlaneType(UUID id, PatchPlaneTypeRequest request) {
-       return service.find(id).map(entity -> {
-           service.update(factory.updatePlaneType().apply(entity, request));
-           return Response.ok().build();
-       })
-               .orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
+        try {
+            return service.find(id).map(entity -> {
+                service.update(factory.updatePlaneType().apply(entity, request));
+                return Response.ok().build();
+            }).orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex);
+            }
+            throw ex;
+        }
     }
 
     @Override
     public Response deletePlaneType(UUID id) {
-        return service.find(id).map(entity -> {
-            service.delete(id);
-            return Response.ok().build();
-        })
-                .orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
+        try {
+            return service.find(id).map(entity -> {
+                service.delete(id);
+                return Response.ok().build();
+            }).orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex);
+            }
+            throw ex;
+        }
     }
 }

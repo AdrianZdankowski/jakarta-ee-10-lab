@@ -49,6 +49,6 @@ Content-Type: application/json
 ###
 
 # Delete airplane
-DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/681bc221-0a21-4f3e-a726-6cebac04b210
+DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
 
 ###
