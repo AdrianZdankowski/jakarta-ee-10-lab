@@ -48,12 +48,13 @@ public class PlaneTypeRestController implements PlaneTypeController {
     public Response putPlaneType(UUID id, PutPlaneTypeRequest request) {
         try {
             boolean exists = service.find(id).isPresent();
-            service.create(factory.requestToPlaneType().apply(id, request));
 
-            if (!exists) {
-                return Response.created(URI.create("/api/planetypes/" + id)).build();
-            } else {
+            if (exists) {
+                service.update(factory.requestToPlaneType().apply(id, request));
                 return Response.ok().build();
+            } else {
+                service.create(factory.requestToPlaneType().apply(id, request));
+                return Response.created(URI.create("/api/planetypes/" + id)).build();
             }
         } catch (TransactionalException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
