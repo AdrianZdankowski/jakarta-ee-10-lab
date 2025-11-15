@@ -36,7 +36,7 @@ public class Pilot implements Serializable {
     @EqualsAndHashCode.Exclude
     private List<Airplane> airplanes;
 
-    @CollectionTable(name = "pilot__roles", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "pilots__roles", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
