@@ -5,7 +5,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Startup;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.inject.Singleton;
+import jakarta.ejb.Singleton;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.airplane.entity.Airplane;
