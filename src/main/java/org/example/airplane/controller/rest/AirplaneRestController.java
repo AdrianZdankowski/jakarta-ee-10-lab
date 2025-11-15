@@ -1,7 +1,8 @@
 package org.example.airplane.controller.rest;
 
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
-import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
@@ -20,13 +21,17 @@ import java.util.UUID;
 @Path("")
 public class AirplaneRestController implements AirplaneController {
 
-    private final AirplaneService service;
+    private AirplaneService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public AirplaneRestController(AirplaneService service, DtoFunctionFactory factory) {
-        this.service = service;
+    public AirplaneRestController(DtoFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(AirplaneService service) {
+        this.service = service;
     }
 
     @Override
@@ -82,7 +87,7 @@ public class AirplaneRestController implements AirplaneController {
                 service.update(factory.updateAirplane().apply(entity, request, typeId));
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }
@@ -97,7 +102,7 @@ public class AirplaneRestController implements AirplaneController {
                 service.delete(id);
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }

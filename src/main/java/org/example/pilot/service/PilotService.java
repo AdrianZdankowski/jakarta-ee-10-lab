@@ -1,8 +1,8 @@
 package org.example.pilot.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
 import org.example.datastore.component.AvatarStore;
@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class PilotService {
     private final PilotRepository repository;
@@ -44,7 +45,6 @@ public class PilotService {
         return repository.findAll();
     }
 
-    @Transactional
     public void create(Pilot pilot) {
         repository.create(pilot);
     }

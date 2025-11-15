@@ -1,5 +1,6 @@
 package org.example.pilot.controller.rest;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
@@ -21,13 +22,17 @@ import java.util.UUID;
 @Path("")
 public class PilotRestController implements PilotController {
 
-    private final PilotService service;
+    private PilotService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public PilotRestController(PilotService service, DtoFunctionFactory factory) {
-        this.service = service;
+    public PilotRestController(DtoFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(PilotService service) {
+        this.service = service;
     }
 
     @Override

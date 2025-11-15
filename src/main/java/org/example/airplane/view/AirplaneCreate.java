@@ -1,5 +1,6 @@
 package org.example.airplane.view;
 
+import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -21,8 +22,8 @@ import java.util.stream.Collectors;
 @Named
 @NoArgsConstructor(force = true)
 public class AirplaneCreate implements Serializable {
-    private final AirplaneService airplaneService;
-    private final PlaneTypeService planeTypeService;
+    private AirplaneService airplaneService;
+    private PlaneTypeService planeTypeService;
     private final ModelFunctionFactory factory;
 
     @Getter
@@ -32,12 +33,18 @@ public class AirplaneCreate implements Serializable {
     private List<PlaneTypeModel> planeTypes;
 
     @Inject
-    public AirplaneCreate(AirplaneService airplaneService,
-                          PlaneTypeService planeTypeService,
-                          ModelFunctionFactory factory) {
-        this.airplaneService = airplaneService;
-        this.planeTypeService = planeTypeService;
+    public AirplaneCreate(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setAirplaneService(AirplaneService airplaneService) {
+        this.airplaneService = airplaneService;
+    }
+
+    @EJB
+    public void setPlaneTypeService(PlaneTypeService planeTypeService) {
+        this.planeTypeService = planeTypeService;
     }
 
     public void init() {

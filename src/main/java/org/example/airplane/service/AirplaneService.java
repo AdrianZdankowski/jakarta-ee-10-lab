@@ -1,8 +1,8 @@
 package org.example.airplane.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import org.example.airplane.entity.Airplane;
 import org.example.airplane.entity.PlaneType;
@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class AirplaneService {
+
     private final AirplaneRepository airplaneRepository;
     private final PlaneTypeRepository planeTypeRepository;
     private final PilotRepository pilotRepository;
@@ -48,7 +50,6 @@ public class AirplaneService {
         return airplaneRepository.findAllByPilot(pilot);
     }
 
-    @Transactional
     public void create(Airplane airplane) {
         if (airplaneRepository.find(airplane.getId()).isPresent()) {
             throw new IllegalArgumentException("Airplane already exists.");
@@ -56,24 +57,22 @@ public class AirplaneService {
 
         PlaneType planeType = planeTypeRepository.find(airplane.getPlaneType().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Plane type does not exists."));
-//        Pilot pilot = pilotRepository.find(airplane.getPilot().getId())
-//                        .orElseThrow(() -> new IllegalArgumentException("Pilot does not exists."));
+        Pilot pilot = pilotRepository.find(airplane.getPilot().getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Pilot does not exists."));
 
         airplane.setPlaneType(planeType);
-        //airplane.setPilot(pilot);
+        airplane.setPilot(pilot);
 
         airplaneRepository.create(airplane);
 
         planeType.getAirplanes().add(airplane);
-        //pilot.getAirplanes().add(airplane);
+        pilot.getAirplanes().add(airplane);
     }
 
-    @Transactional
     public void update(Airplane airplane) {
         airplaneRepository.update(airplane);
     }
 
-    @Transactional
     public void delete(UUID id) {
         Airplane airplane = airplaneRepository.find(id)
                 .orElseThrow(() -> new IllegalArgumentException("Airplane not found."));

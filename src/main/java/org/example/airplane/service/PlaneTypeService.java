@@ -1,8 +1,9 @@
 package org.example.airplane.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 import org.example.airplane.entity.PlaneType;
@@ -12,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 @Log
 public class PlaneTypeService {
@@ -33,17 +35,14 @@ public class PlaneTypeService {
         return repository.findAll();
     }
 
-    @Transactional
     public void create(PlaneType planeType) {
         repository.create(planeType);
     }
 
-    @Transactional
     public void delete(UUID id) {
         repository.delete(repository.find(id).orElseThrow());
     }
 
-    @Transactional
     public void update(PlaneType entity) {
         repository.update(entity);
     }

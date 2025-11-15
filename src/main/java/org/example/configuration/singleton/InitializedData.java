@@ -1,10 +1,12 @@
-package org.example.configuration.observer;
+package org.example.configuration.singleton;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Initialized;
-import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Startup;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Singleton;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.airplane.entity.Airplane;
 import org.example.airplane.entity.PlaneType;
@@ -17,36 +19,33 @@ import org.example.pilot.service.PilotService;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@ApplicationScoped
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
+@NoArgsConstructor
 public class InitializedData {
     private PilotService pilotService;
     private PlaneTypeService planeTypeService;
     private AirplaneService airplaneService;
 
-    private final RequestContextController requestContextController;
-
-
-    @Inject
-    public InitializedData(
-            PilotService pilotService,
-            PlaneTypeService planeTypeService,
-            AirplaneService airplaneService,
-            RequestContextController requestContextController
-    ) {
+    @EJB
+    public void setPilotService(PilotService pilotService) {
         this.pilotService = pilotService;
-        this.planeTypeService = planeTypeService;
+    }
+
+    @EJB
+    public void setAirplaneService(AirplaneService airplaneService) {
         this.airplaneService = airplaneService;
-        this.requestContextController = requestContextController;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
+    @EJB
+    public void setPlaneTypeService(PlaneTypeService planeTypeService) {
+        this.planeTypeService = planeTypeService;
     }
 
+    @PostConstruct
     @SneakyThrows
     private void init() {
-        requestContextController.activate();
-
         if (pilotService.find("Jan Kowalski").isEmpty()) {
 
             Pilot general = Pilot.builder()
@@ -158,7 +157,5 @@ public class InitializedData {
             airplaneService.create(airbus);
             airplaneService.create(c130);
         }
-
-        requestContextController.deactivate();
     }
 }

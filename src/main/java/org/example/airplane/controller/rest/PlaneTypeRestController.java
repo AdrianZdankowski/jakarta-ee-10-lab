@@ -1,7 +1,8 @@
 package org.example.airplane.controller.rest;
 
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
-import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
@@ -21,13 +22,17 @@ import java.util.UUID;
 @Path("")
 public class PlaneTypeRestController implements PlaneTypeController {
 
-    private final PlaneTypeService service;
+    private PlaneTypeService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public PlaneTypeRestController(PlaneTypeService service, DtoFunctionFactory factory) {
-        this.service = service;
+    public PlaneTypeRestController(DtoFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(PlaneTypeService service) {
+        this.service = service;
     }
 
     @Override
@@ -56,7 +61,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
                 service.create(factory.requestToPlaneType().apply(id, request));
                 return Response.created(URI.create("/api/planetypes/" + id)).build();
             }
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }
@@ -71,7 +76,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
                 service.update(factory.updatePlaneType().apply(entity, request));
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }
@@ -86,7 +91,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
                 service.delete(id);
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }
