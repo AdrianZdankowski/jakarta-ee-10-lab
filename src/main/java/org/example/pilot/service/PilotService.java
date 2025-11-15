@@ -1,12 +1,16 @@
 package org.example.pilot.service;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
 import org.example.datastore.component.AvatarStore;
 import org.example.pilot.entity.Pilot;
+import org.example.pilot.entity.PilotRoles;
 import org.example.pilot.repository.api.PilotRepository;
 
 import java.io.FileNotFoundException;
@@ -22,11 +26,14 @@ import java.util.UUID;
 public class PilotService {
     private final PilotRepository repository;
     private final AvatarStore avatarStore;
+    private final Pbkdf2PasswordHash passwordHash;
 
     @Inject
-    public PilotService(PilotRepository repository, AvatarStore avatarStore) {
+    public PilotService(PilotRepository repository, AvatarStore avatarStore,
+                        @SuppressWarnings("CdiInjectionPointsInspection") Pbkdf2PasswordHash passwordHash) {
         this.repository = repository;
         this.avatarStore = avatarStore;
+        this.passwordHash = passwordHash;
     }
 
     public Optional<Pilot> find(UUID id)  {
@@ -41,11 +48,14 @@ public class PilotService {
         return repository.findByLogin(login);
     }
 
+    @RolesAllowed(PilotRoles.ADMIN)
     public List<Pilot> findAll() {
         return repository.findAll();
     }
 
+    @PermitAll
     public void create(Pilot pilot) {
+        pilot.setPassword(passwordHash.generate(pilot.getPassword().toCharArray()));
         repository.create(pilot);
     }
 
@@ -95,5 +105,11 @@ public class PilotService {
         catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    public boolean verify(String login, String password) {
+        return find(login)
+                .map(pilot -> passwordHash.verify(password.toCharArray(), pilot.getPassword()))
+                .orElse(false);
     }
 }

@@ -1,5 +1,6 @@
 package org.example.pilot.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -13,6 +14,7 @@ import org.example.pilot.dto.GetPilotResponse;
 import org.example.pilot.dto.GetPilotsResponse;
 import org.example.pilot.dto.PatchPilotRequest;
 import org.example.pilot.dto.PutPilotRequest;
+import org.example.pilot.entity.PilotRoles;
 import org.example.pilot.service.PilotService;
 
 import java.io.InputStream;
@@ -43,6 +45,7 @@ public class PilotRestController implements PilotController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public GetPilotsResponse getPilots() {
         return factory.pilotsToResponse().apply(service.findAll());
     }

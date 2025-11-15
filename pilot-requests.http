@@ -1,6 +1,7 @@
 # Get all pilots (users)
+// @no-cookie-jar
 GET http://localhost:9080/aviation/api/pilots/
-
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 ###
 
 # Add new pilot
@@ -8,7 +9,7 @@ PUT http://localhost:9080/aviation/api/pilots/962ad41d-f371-4892-b472-5fcbff45d3
 Content-Type: application/json
 
 {
-    "login": "brolan1",
+    "login": "brolan",
     "password": "qwerty",
     "pilotName": "Olaf Brolan",
     "rank": "MAJOR"

@@ -57,16 +57,16 @@ public class AirplaneService {
 
         PlaneType planeType = planeTypeRepository.find(airplane.getPlaneType().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Plane type does not exists."));
-        Pilot pilot = pilotRepository.find(airplane.getPilot().getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Pilot does not exists."));
+//        Pilot pilot = pilotRepository.find(airplane.getPilot().getId())
+//                        .orElseThrow(() -> new IllegalArgumentException("Pilot does not exists."));
 
         airplane.setPlaneType(planeType);
-        airplane.setPilot(pilot);
+        //airplane.setPilot(pilot);
 
         airplaneRepository.create(airplane);
 
         planeType.getAirplanes().add(airplane);
-        pilot.getAirplanes().add(airplane);
+        //pilot.getAirplanes().add(airplane);
     }
 
     public void update(Airplane airplane) {

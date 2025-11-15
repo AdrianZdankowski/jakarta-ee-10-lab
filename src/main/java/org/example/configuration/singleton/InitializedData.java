@@ -1,11 +1,11 @@
 package org.example.configuration.singleton;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJB;
-import jakarta.ejb.Startup;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
-import jakarta.ejb.Singleton;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.airplane.entity.Airplane;
@@ -14,19 +14,29 @@ import org.example.airplane.service.AirplaneService;
 import org.example.airplane.service.PlaneTypeService;
 import org.example.pilot.entity.Pilot;
 import org.example.pilot.entity.PilotRank;
+import org.example.pilot.entity.PilotRoles;
 import org.example.pilot.service.PilotService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Singleton
 @Startup
-@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
-@NoArgsConstructor
+@TransactionAttribute(value = TransactionAttributeType.REQUIRED)
+@NoArgsConstructor(force = true)
+@DependsOn("InitializeAdminService")
 public class InitializedData {
     private PilotService pilotService;
     private PlaneTypeService planeTypeService;
     private AirplaneService airplaneService;
+
+    @Inject
+    private SecurityContext securityContext;
+
+    @Inject
+    @SuppressWarnings("CdiInjectionPointsInspection")
+    private Pbkdf2PasswordHash passwordHash;
 
     @EJB
     public void setPilotService(PilotService pilotService) {
@@ -46,10 +56,13 @@ public class InitializedData {
     @PostConstruct
     @SneakyThrows
     private void init() {
-        if (pilotService.find("Jan Kowalski").isEmpty()) {
+        if (pilotService.findByLogin("admin").isEmpty()) {
 
             Pilot general = Pilot.builder()
                     .id(UUID.fromString("39afa67e-1728-4050-8327-0cd92e715565"))
+                    .login("admin")
+                    .password("adminadmin")
+                    .roles(List.of(PilotRoles.ADMIN, PilotRoles.USER))
                     .pilotName("Jan Kowalski")
                     .accountCreationDate(LocalDate.now())
                     .rank(PilotRank.CAPTAIN)
@@ -57,6 +70,9 @@ public class InitializedData {
 
             Pilot major = Pilot.builder()
                     .id(UUID.fromString("cb7057a8-ff08-430a-a909-fdc84f177db3"))
+                    .login("robert")
+                    .password("useruser")
+                    .roles(List.of(PilotRoles.USER))
                     .pilotName("Robert Mak")
                     .accountCreationDate(LocalDate.now())
                     .rank(PilotRank.MAJOR)
@@ -64,6 +80,9 @@ public class InitializedData {
 
             Pilot officer = Pilot.builder()
                     .id(UUID.fromString("8c9ccdaa-c35f-496a-8e6b-d44a25e83be9"))
+                    .login("emilia")
+                    .password("useruser")
+                    .roles(List.of(PilotRoles.USER))
                     .pilotName("Emilia Earhart")
                     .accountCreationDate(LocalDate.now())
                     .rank(PilotRank.OFFICER)
@@ -71,6 +90,9 @@ public class InitializedData {
 
             Pilot otherPilot = Pilot.builder()
                     .id(UUID.fromString("3d85ad37-3d29-4f1a-b95d-7bd059304065"))
+                    .login("adam")
+                    .password("useruser")
+                    .roles(List.of(PilotRoles.USER))
                     .pilotName("Adam Nos")
                     .accountCreationDate(LocalDate.now())
                     .rank(PilotRank.OFFICER)
