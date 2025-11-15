@@ -1,0 +1,17 @@
+# Get all pilots (users)
+GET http://localhost:9080/aviation/api/pilots/
+
+###
+
+# Add new pilot
+PUT http://localhost:9080/aviation/api/pilots/962ad41d-f371-4892-b472-5fcbff45d357
+Content-Type: application/json
+
+{
+    "login": "brolan1",
+    "password": "qwerty",
+    "pilotName": "Olaf Brolan",
+    "rank": "MAJOR"
+}
+
+###

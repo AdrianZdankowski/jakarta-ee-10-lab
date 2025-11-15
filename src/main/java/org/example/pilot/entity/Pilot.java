@@ -24,10 +24,21 @@ public class Pilot implements Serializable {
     private UUID id;
     private String pilotName;
     private LocalDate accountCreationDate;
-    private PilotRank role;
+    private PilotRank rank;
 
-    @OneToMany(mappedBy = "pilot", fetch = FetchType.LAZY)
+    private String login;
+
+    @ToString.Exclude
+    private String password;
+
+    @OneToMany(mappedBy = "pilot", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Airplane> airplanes;
+
+    @CollectionTable(name = "pilot__roles", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
 }

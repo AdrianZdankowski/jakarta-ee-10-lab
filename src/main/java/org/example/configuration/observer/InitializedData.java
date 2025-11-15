@@ -53,28 +53,28 @@ public class InitializedData {
                     .id(UUID.fromString("39afa67e-1728-4050-8327-0cd92e715565"))
                     .pilotName("Jan Kowalski")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.CAPTAIN)
+                    .rank(PilotRank.CAPTAIN)
                     .build();
 
             Pilot major = Pilot.builder()
                     .id(UUID.fromString("cb7057a8-ff08-430a-a909-fdc84f177db3"))
                     .pilotName("Robert Mak")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.MAJOR)
+                    .rank(PilotRank.MAJOR)
                     .build();
 
             Pilot officer = Pilot.builder()
                     .id(UUID.fromString("8c9ccdaa-c35f-496a-8e6b-d44a25e83be9"))
                     .pilotName("Emilia Earhart")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.OFFICER)
+                    .rank(PilotRank.OFFICER)
                     .build();
 
             Pilot otherPilot = Pilot.builder()
                     .id(UUID.fromString("3d85ad37-3d29-4f1a-b95d-7bd059304065"))
                     .pilotName("Adam Nos")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.OFFICER)
+                    .rank(PilotRank.OFFICER)
                     .build();
 
             pilotService.create(general);

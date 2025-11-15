@@ -14,7 +14,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class GetPilotResponse {
     private UUID id;
+    private String login;
     private String pilotName;
     private LocalDate accountCreationDate;
-    private String role;
+    private String rank;
 }

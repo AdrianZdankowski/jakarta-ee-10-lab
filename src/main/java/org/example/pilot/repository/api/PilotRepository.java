@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface PilotRepository extends Repository<Pilot, UUID> {
     Optional<Pilot> findByPilotName(String pilotName);
+
+    Optional<Pilot> findByLogin(String login);
 }

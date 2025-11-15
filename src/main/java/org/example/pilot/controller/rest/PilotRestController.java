@@ -1,9 +1,11 @@
-package org.example.pilot.controller.simple;
+package org.example.pilot.controller.rest;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import org.example.component.DtoFunctionFactory;
 import org.example.pilot.controller.api.PilotController;
 import org.example.pilot.dto.GetPilotResponse;
@@ -13,16 +15,17 @@ import org.example.pilot.dto.PutPilotRequest;
 import org.example.pilot.service.PilotService;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.UUID;
 
-@RequestScoped
-public class PilotSimpleController implements PilotController {
+@Path("")
+public class PilotRestController implements PilotController {
 
     private final PilotService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public PilotSimpleController(PilotService service, DtoFunctionFactory factory) {
+    public PilotRestController(PilotService service, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;
     }
@@ -40,9 +43,22 @@ public class PilotSimpleController implements PilotController {
     }
 
     @Override
-    public void putPilot(UUID id, PutPilotRequest request) {
+    public Response putPilot(UUID id, PutPilotRequest request) {
         try {
-            service.create(factory.requestToPilot().apply(id,request));
+            boolean exists = service.find(id).isPresent();
+
+            if (exists) {
+                throw new BadRequestException(
+                        String.format("Pilot with id %s already exists", id)
+                );
+            }
+
+            service.create(factory.requestToPilot().apply(id, request));
+
+            return Response.created(
+                    URI.create(String.format("/api/pilots/%s", id))
+            ).build();
+
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException("Given data is incorrect");
         }
@@ -96,6 +112,7 @@ public class PilotSimpleController implements PilotController {
                 () -> {
                     throw new NotFoundException("Pilot with id %s does not exist.".formatted(id));
                 }
-                );
+        );
     }
 }
+

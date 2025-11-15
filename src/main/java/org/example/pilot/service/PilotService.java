@@ -36,6 +36,10 @@ public class PilotService {
         return repository.findByPilotName(pilotName);
     }
 
+    public Optional<Pilot> findByLogin(String login) {
+        return repository.findByLogin(login);
+    }
+
     public List<Pilot> findAll() {
         return repository.findAll();
     }

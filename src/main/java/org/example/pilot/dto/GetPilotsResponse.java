@@ -23,6 +23,7 @@ public class GetPilotsResponse {
     @EqualsAndHashCode
     public static class Pilot {
         private UUID id;
+        private String login;
         private String pilotName;
     }
 

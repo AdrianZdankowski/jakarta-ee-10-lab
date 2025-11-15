@@ -11,5 +11,5 @@ import lombok.*;
 @EqualsAndHashCode
 public class PatchPilotRequest {
     private String pilotName;
-    private String role;
+    private String rank;
 }

@@ -60,19 +60,18 @@ public class AirplaneRestController implements AirplaneController {
         try {
             boolean exists = service.find(id).isPresent();
 
-            if (!exists) {
+            if (exists) {
+                service.update(factory.requestToAirplane().apply(typeId, id, request));
+                return Response.ok().build();
+
+            }
+            else {
                 service.create(factory.requestToAirplane().apply(typeId, id, request));
                 return Response.created(URI.create(String.format("/api/planetypes/%s/airplanes/%s", typeId, id)))
                         .build();
             }
-            else {
-                return Response.noContent().build();
-            }
-        } catch (TransactionalException ex) {
-            if (ex.getCause() instanceof IllegalArgumentException) {
-                throw new BadRequestException(ex);
-            }
-            throw ex;
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("Planetype with id %s not found".formatted(id));
         }
     }
 

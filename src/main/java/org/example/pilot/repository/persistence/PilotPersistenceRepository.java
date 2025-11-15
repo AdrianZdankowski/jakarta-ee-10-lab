@@ -33,6 +33,17 @@ public class PilotPersistenceRepository implements PilotRepository {
     }
 
     @Override
+    public Optional<Pilot> findByLogin(String login) {
+        try {
+            return Optional.of(em.createQuery("select p from Pilot p where p.login = :login", Pilot.class)
+                    .setParameter("login", login)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Optional<Pilot> find(UUID id) {
         return Optional.ofNullable(em.find(Pilot.class, id));
     }

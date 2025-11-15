@@ -14,8 +14,10 @@ public class RequestToPilotFunction implements BiFunction<UUID, PutPilotRequest,
     public Pilot apply(UUID id, PutPilotRequest request) {
         return Pilot.builder()
                 .id(id)
+                .login(request.getLogin())
+                .password(request.getPassword())
                 .pilotName(request.getPilotName())
-                .role(PilotRank.valueOf(request.getRole().toUpperCase()))
+                .rank(PilotRank.valueOf(request.getRank().toUpperCase()))
                 .accountCreationDate(LocalDate.now())
                 .build();
     }
