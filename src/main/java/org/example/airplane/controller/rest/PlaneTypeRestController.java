@@ -1,5 +1,6 @@
 package org.example.airplane.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
@@ -7,6 +8,7 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+import org.example.pilot.entity.PilotRoles;
 import org.example.airplane.controller.api.PlaneTypeController;
 import org.example.airplane.dto.GetPlaneTypeResponse;
 import org.example.airplane.dto.GetPlaneTypesResponse;
@@ -36,12 +38,14 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetPlaneTypesResponse getPlaneTypes() {
         return factory.planeTypesToResponse().apply(service.findAll());
 
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetPlaneTypeResponse getPlaneType(UUID id) {
         return service.find(id)
                 .map(factory.planeTypeToResponse())
@@ -50,6 +54,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public Response putPlaneType(UUID id, PutPlaneTypeRequest request) {
         try {
             boolean exists = service.find(id).isPresent();
@@ -70,6 +75,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public Response patchPlaneType(UUID id, PatchPlaneTypeRequest request) {
         try {
             return service.find(id).map(entity -> {
@@ -85,6 +91,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public Response deletePlaneType(UUID id) {
         try {
             return service.find(id).map(entity -> {

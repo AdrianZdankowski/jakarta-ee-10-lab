@@ -38,6 +38,6 @@
     <basicRegistry id="basic" realm="BasicRealm">
         <user name="admin-service" password="adminadmin" />
     </basicRegistry>
-    <httpEndpoint id="defaultHttpEndpoint" httpPort="9080" httpsPort="9443" host="*"/>
+    
 
 </server>
