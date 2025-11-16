@@ -63,7 +63,7 @@ public class AirplaneRestController implements AirplaneController {
     @Override
     public Response putAirplane(UUID typeId, UUID id, PutAirplaneRequest request) {
         try {
-            boolean exists = service.find(id).isPresent();
+            boolean exists = service.findForUpdate(id).isPresent();
 
             if (exists) {
                 service.update(factory.requestToAirplane().apply(typeId, id, request));
@@ -83,7 +83,7 @@ public class AirplaneRestController implements AirplaneController {
     @Override
     public Response patchAirplane(UUID id, PatchAirplaneRequest request, UUID typeId) {
         try {
-            return service.find(id).map(entity -> {
+            return service.findForUpdate(id).map(entity -> {
                 service.update(factory.updateAirplane().apply(entity, request, typeId));
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
@@ -98,7 +98,7 @@ public class AirplaneRestController implements AirplaneController {
     @Override
     public Response deleteAirplane(UUID id) {
         try {
-            return service.find(id).map(entity -> {
+            return service.findForUpdate(id).map(entity -> {
                 service.delete(id);
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));

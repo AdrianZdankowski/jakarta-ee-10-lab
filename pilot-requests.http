@@ -1,7 +1,14 @@
-# Get all pilots (users)
+### admin YWRtaW46YWRtaW5hZG1pbg== | user cm9iZXJ0OnVzZXJ1c2Vy | invalid aW52YWxpZDppbnZhbGlk
+# Get all pilots (admin)
 // @no-cookie-jar
 GET http://localhost:9080/aviation/api/pilots/
 Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+###
+
+# Get all pilots (user) should return 403 Forbidden
+// @no-cookie-jar
+GET http://localhost:9080/aviation/api/pilots/
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 ###
 
 # Add new pilot
