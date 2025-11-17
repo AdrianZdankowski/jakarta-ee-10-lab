@@ -27,9 +27,10 @@ Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 
 ###
 
-# Get all plane type airplanes
-
+# Get all plane type airplanes (admin)
+//@no-cookie-jar
 GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 
 ###
 
