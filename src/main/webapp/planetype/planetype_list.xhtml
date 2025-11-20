@@ -10,7 +10,8 @@
         <article class="text--justified">
             <header><h2>#{planetypeMessages['planetype.list.title']}</h2></header>
 
-            <h:dataTable value="#{planeTypeList.planeTypes.planeTypes}" var="planeType"
+            <h:panelGroup id="planeTypesTableWrapper">
+                <h:dataTable id="planeTypesTable" value="#{planeTypeList.planeTypes.planeTypes}" var="planeType"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
                 <h:column>
                     <f:facet name="header">#{planetypeMessages['planetype.list.column.name']}</f:facet>
@@ -28,11 +29,14 @@
                     <f:facet name="header">#{planetypeMessages['planetype.list.column.delete']}</f:facet>
                     <h:form>
                         <h:commandButton styleClass="btn" value="#{planetypeMessages['planetype.list.action.delete']}"
-                                         action="#{planeTypeList.deleteAction(planeType)}"/>
+                                         actionListener="#{planeTypeList.deleteAction(planeType)}">
+                            <f:ajax execute="@this" render="planeTypesTableWrapper"/>      
+                        </h:commandButton>
                     </h:form>
                 </h:column>
 
             </h:dataTable>
+            </h:panelGroup>
         </article>
     </ui:define>
 

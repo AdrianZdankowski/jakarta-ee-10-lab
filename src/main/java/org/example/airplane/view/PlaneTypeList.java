@@ -32,8 +32,8 @@ public class PlaneTypeList {
         return planeTypes;
     }
 
-    public String deleteAction(PlaneTypesModel.PlaneType planeType) {
+    public void deleteAction(PlaneTypesModel.PlaneType planeType) {
         service.delete(planeType.getId());
-        return "planetype_list?faces-redirect=true";
+        planeTypes = null;
     }
 }

@@ -27,7 +27,8 @@
             </h:panelGrid>
 
             <h3>#{airplaneMessages['planetype.view.airplanes.title']}</h3>
-            <h:dataTable value="#{planeTypeView.planeType.airplanes}" var="airplane"
+            <h:panelGroup id="airplanesTableWrapper">
+                <h:dataTable value="#{planeTypeView.planeType.airplanes}" var="airplane"
                          styleClass="table table-striped table-hover">
                 <h:column>
                     <f:facet name="header">#{airplaneMessages['planetype.view.airplanes.column.name']}</f:facet>
@@ -53,7 +54,8 @@
                     <h:form>
                         <h:commandButton value="#{airplaneMessages['planetype.view.airplanes.action.delete']}"
                                          styleClass="btn"
-                                         action="#{planeTypeView.deleteAirplane(airplane.id)}">
+                                         actionListener="#{planeTypeView.deleteAirplane(airplane.id)}">
+                            <f:ajax execute="@this" render="airplanesTableWrapper"/>
                         </h:commandButton>
                     </h:form>
                 </h:column>
@@ -67,6 +69,7 @@
                 </f:facet>
 
             </h:dataTable>
+            </h:panelGroup>
 
         </article>
     </ui:define>

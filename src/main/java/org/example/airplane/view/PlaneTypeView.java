@@ -89,9 +89,17 @@ public class PlaneTypeView implements Serializable {
         }
     }
 
-    public String deleteAirplane(UUID id) {
+    public void deleteAirplane(UUID id) {
         airplaneService.delete(id);
-        return "planetype_view?faces-redirect=true&amp;id=" + planeType.getId();
+        // Reload airplanes list
+        airplaneService.findAllByPlaneType(this.id)
+                .ifPresent(airplanes ->
+                        this.planeType.setAirplanes(
+                                airplanes.stream()
+                                        .map(factory.airplaneToModel())
+                                        .toList()
+                        )
+                );
     }
 
 }
