@@ -13,33 +13,33 @@
     <ui:define name="content">
 
         <article>
-            <header><h2>Airplane Details</h2></header>
+            <header><h2>#{airplaneMessages['airplane.view.title']}</h2></header>
 
             <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputText value="Name:"/>
+                <h:outputText value="#{airplaneMessages['airplane.view.label.name']}"/>
                 <h:outputText value="#{airplaneView.airplane.name}"/>
 
-                <h:outputText value="Year of production:"/>
+                <h:outputText value="#{airplaneMessages['airplane.view.label.year']}"/>
                 <h:outputText value="#{airplaneView.airplane.yearOfProduction}"/>
 
-                <h:outputText value="Flight hours:"/>
+                <h:outputText value="#{airplaneMessages['airplane.view.label.hours']}"/>
                 <h:outputText value="#{airplaneView.airplane.flightHours}"/>
 
-                <h:outputText value="Plane Type:"/>
+                <h:outputText value="#{airplaneMessages['airplane.view.label.type']}"/>
                 <h:outputText value="#{airplaneView.airplane.planeType}"/>
             </h:panelGrid>
 
             <f:facet name="footer">
                 <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
-                          value="Back to list"/>
+                          value="#{airplaneMessages['airplane.view.action.back']}"/>
 
                 <h:button styleClass="btn" outcome="/airplane/airplane_create.xhtml"
-                          value="Create new airplane"/>
+                          value="#{airplaneMessages['airplane.view.action.create']}"/>
             </f:facet>
 
             <h:panelGroup layout="block" styleClass="form-footer mt-3">
                 <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
-                          value="Back to list"/>
+                          value="#{airplaneMessages['airplane.view.action.back']}"/>
             </h:panelGroup>
 
         </article>

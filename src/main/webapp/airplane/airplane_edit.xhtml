@@ -14,7 +14,7 @@
     <ui:define name="content">
 
         <article>
-            <header><h2>Edit Airplane</h2></header>
+            <header><h2>#{airplaneMessages['airplane.edit.title']}</h2></header>
 
             <h:form styleClass="form">
 
@@ -22,31 +22,31 @@
 
                 <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
 
-                    <h:outputLabel for="name" value="Name:"/>
+                    <h:outputLabel for="name" value="#{airplaneMessages['airplane.edit.label.name']}"/>
                     <h:inputText id="name"
                                  value="#{airplaneEdit.airplane.name}"
                                  required="true"/>
 
-                    <h:outputLabel for="year" value="Year of Production:"/>
+                    <h:outputLabel for="year" value="#{airplaneMessages['airplane.edit.label.year']}"/>
                     <h:inputText id="year"
                                  value="#{airplaneEdit.airplane.yearOfProduction}"
                                  required="true"/>
 
-                    <h:outputLabel for="hours" value="Flight Hours:"/>
+                    <h:outputLabel for="hours" value="#{airplaneMessages['airplane.edit.label.hours']}"/>
                     <h:inputText id="hours"
                                  value="#{airplaneEdit.airplane.flightHours}"
                                  required="true"/>
 
-                    <h:outputLabel for="type" value="Plane Type:"/>
+                    <h:outputLabel for="type" value="#{airplaneMessages['airplane.edit.label.type']}"/>
                     <h:outputText id="type" value="#{airplaneEdit.planeType.name}"/>
 
                 </h:panelGrid>
 
                 <h:panelGroup layout="block" styleClass="form-footer mt-3">
-                    <h:commandButton value="Save"
+                    <h:commandButton value="#{airplaneMessages['airplane.edit.action.save']}"
                                      action="#{airplaneEdit.saveAction}"
                                      styleClass="btn btn-primary"/>
-                    <h:link value="Cancel"
+                    <h:link value="#{airplaneMessages['airplane.edit.action.cancel']}"
                             outcome="/planetype/planetype_view.xhtml"
                             styleClass="btn btn-secondary ms-2">
                         <f:param name="id" value="#{airplaneEdit.planeType.id}" />

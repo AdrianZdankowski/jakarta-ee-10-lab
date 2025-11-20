@@ -8,26 +8,26 @@
     <ui:define name="content">
 
         <article class="text--justified">
-            <header><h2>Plane types</h2></header>
+            <header><h2>#{planetypeMessages['planetype.list.title']}</h2></header>
 
             <h:dataTable value="#{planeTypeList.planeTypes.planeTypes}" var="planeType"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
                 <h:column>
-                    <f:facet name="header">Name</f:facet>
+                    <f:facet name="header">#{planetypeMessages['planetype.list.column.name']}</f:facet>
                     <h:outputText value="#{planeType.name}"/>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">View</f:facet>
-                    <h:link outcome="/planetype/planetype_view.xhtml" value="View">
+                    <f:facet name="header">#{planetypeMessages['planetype.list.column.view']}</f:facet>
+                    <h:link outcome="/planetype/planetype_view.xhtml" value="#{planetypeMessages['planetype.list.action.view']}">
                         <f:param name="id" value="#{planeType.id}"/>
                     </h:link>
                 </h:column>
 
                 <h:column rendered="#{request.isUserInRole('admin')}">
-                    <f:facet name="header">Delete</f:facet>
+                    <f:facet name="header">#{planetypeMessages['planetype.list.column.delete']}</f:facet>
                     <h:form>
-                        <h:commandButton styleClass="btn" value="Delete"
+                        <h:commandButton styleClass="btn" value="#{planetypeMessages['planetype.list.action.delete']}"
                                          action="#{planeTypeList.deleteAction(planeType)}"/>
                     </h:form>
                 </h:column>
