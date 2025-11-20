@@ -47,7 +47,15 @@ public class AirplaneCreate implements Serializable {
         this.planeTypeService = planeTypeService;
     }
 
-    public void init() {
+    public void init() throws java.io.IOException {
+        jakarta.faces.context.FacesContext context = jakarta.faces.context.FacesContext.getCurrentInstance();
+        
+        // Check if user is authenticated
+        if (context.getExternalContext().getUserPrincipal() == null) {
+            context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/planetype/planetype_list.xhtml");
+            return;
+        }
+        
         airplane = AirplaneCreateModel.builder()
                 .id(UUID.randomUUID())
                 .build();
