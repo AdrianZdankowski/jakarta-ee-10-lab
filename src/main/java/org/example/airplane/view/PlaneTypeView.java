@@ -53,8 +53,15 @@ public class PlaneTypeView implements Serializable {
     public void init() throws IOException {
         Optional<PlaneType> planeType = planeTypeService.find(id);
         if (planeType.isPresent()) {
-            this.planeType = factory.planeTypeToModel().apply(planeType.get());
+            // Create model without airplanes first
+            this.planeType = PlaneTypeModel.builder()
+                    .id(planeType.get().getId())
+                    .name(planeType.get().getName())
+                    .numberOfEngines(planeType.get().getNumberOfEngines())
+                    .weight(planeType.get().getWeight())
+                    .build();
 
+            // Fetch airplanes using service method which applies role-based filtering
             airplaneService.findAllByPlaneType(id)
                     .ifPresent(airplanes ->
                             this.planeType.setAirplanes(
