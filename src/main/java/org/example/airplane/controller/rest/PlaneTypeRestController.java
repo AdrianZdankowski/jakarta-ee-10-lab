@@ -1,11 +1,14 @@
 package org.example.airplane.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
-import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+import org.example.pilot.entity.PilotRoles;
 import org.example.airplane.controller.api.PlaneTypeController;
 import org.example.airplane.dto.GetPlaneTypeResponse;
 import org.example.airplane.dto.GetPlaneTypesResponse;
@@ -21,22 +24,28 @@ import java.util.UUID;
 @Path("")
 public class PlaneTypeRestController implements PlaneTypeController {
 
-    private final PlaneTypeService service;
+    private PlaneTypeService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public PlaneTypeRestController(PlaneTypeService service, DtoFunctionFactory factory) {
-        this.service = service;
+    public PlaneTypeRestController(DtoFunctionFactory factory) {
         this.factory = factory;
     }
 
+    @EJB
+    public void setService(PlaneTypeService service) {
+        this.service = service;
+    }
+
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetPlaneTypesResponse getPlaneTypes() {
         return factory.planeTypesToResponse().apply(service.findAll());
 
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetPlaneTypeResponse getPlaneType(UUID id) {
         return service.find(id)
                 .map(factory.planeTypeToResponse())
@@ -45,6 +54,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public Response putPlaneType(UUID id, PutPlaneTypeRequest request) {
         try {
             boolean exists = service.find(id).isPresent();
@@ -56,7 +66,7 @@ public class PlaneTypeRestController implements PlaneTypeController {
                 service.create(factory.requestToPlaneType().apply(id, request));
                 return Response.created(URI.create("/api/planetypes/" + id)).build();
             }
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }
@@ -65,13 +75,14 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public Response patchPlaneType(UUID id, PatchPlaneTypeRequest request) {
         try {
             return service.find(id).map(entity -> {
                 service.update(factory.updatePlaneType().apply(entity, request));
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }
@@ -80,13 +91,14 @@ public class PlaneTypeRestController implements PlaneTypeController {
     }
 
     @Override
+    @RolesAllowed(PilotRoles.ADMIN)
     public Response deletePlaneType(UUID id) {
         try {
             return service.find(id).map(entity -> {
                 service.delete(id);
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Plane type with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 throw new BadRequestException(ex);
             }

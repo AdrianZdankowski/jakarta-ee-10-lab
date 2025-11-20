@@ -1,5 +1,6 @@
 package org.example.airplane.view;
 
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @ViewScoped
 @Named
 public class AirplaneEdit implements Serializable {
-    private final AirplaneService airplaneService;
+    private AirplaneService airplaneService;
 //    private final PlaneTypeService planeTypeService;
     private final ModelFunctionFactory factory;
 
@@ -36,10 +37,13 @@ public class AirplaneEdit implements Serializable {
     private PlaneTypeModel planeType;
 
     @Inject
-    public AirplaneEdit(AirplaneService airplaneService,
-                        ModelFunctionFactory factory) {
-        this.airplaneService = airplaneService;
+    public AirplaneEdit(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setAirplaneService(AirplaneService airplaneService) {
+        this.airplaneService = airplaneService;
     }
 
     public void init() throws IOException {

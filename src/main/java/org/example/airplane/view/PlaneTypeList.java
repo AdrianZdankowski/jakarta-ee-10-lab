@@ -1,5 +1,6 @@
 package org.example.airplane.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -10,14 +11,18 @@ import org.example.component.ModelFunctionFactory;
 @RequestScoped
 @Named
 public class PlaneTypeList {
-    private final PlaneTypeService service;
+    private PlaneTypeService service;
     private PlaneTypesModel planeTypes;
     private final ModelFunctionFactory factory;
 
     @Inject
-    public PlaneTypeList(PlaneTypeService service, ModelFunctionFactory factory) {
-        this.service = service;
+    public PlaneTypeList(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(PlaneTypeService service) {
+        this.service = service;
     }
 
     public PlaneTypesModel getPlaneTypes() {

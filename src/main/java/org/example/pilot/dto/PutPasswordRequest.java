@@ -9,9 +9,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-public class PutPilotRequest {
-    private String login;
+public class PutPasswordRequest {
     private String password;
-    private String pilotName;
-    private String rank;
 }

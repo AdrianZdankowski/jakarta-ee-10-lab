@@ -1,11 +1,14 @@
 package org.example.airplane.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
-import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+import org.example.pilot.entity.PilotRoles;
 import org.example.airplane.controller.api.AirplaneController;
 import org.example.airplane.dto.GetAirplaneResponse;
 import org.example.airplane.dto.GetAirplanesResponse;
@@ -20,21 +23,27 @@ import java.util.UUID;
 @Path("")
 public class AirplaneRestController implements AirplaneController {
 
-    private final AirplaneService service;
+    private AirplaneService service;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public AirplaneRestController(AirplaneService service, DtoFunctionFactory factory) {
-        this.service = service;
+    public AirplaneRestController(DtoFunctionFactory factory) {
         this.factory = factory;
     }
 
+    @EJB
+    public void setService(AirplaneService service) {
+        this.service = service;
+    }
+
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetAirplanesResponse getAirplanes() {
         return factory.airplanesToResponse().apply(service.findAll());
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetAirplanesResponse getPlaneTypeAirplanes(UUID id) {
         return service.findAllByPlaneType(id)
                 .map(factory.airplanesToResponse())
@@ -42,13 +51,24 @@ public class AirplaneRestController implements AirplaneController {
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetAirplanesResponse getPilotAirplanes(UUID id) {
-        return service.findAllByPilot(id)
-                .map(factory.airplanesToResponse())
-                .orElseThrow(() -> new NotFoundException("No airplanes found for user id %s".formatted(id)));
+        try {
+            return service.findAllByPilot(id)
+                    .map(factory.airplanesToResponse())
+                    .orElseThrow(() -> new NotFoundException("No airplanes found for user id %s".formatted(id)));
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                throw new BadRequestException(ex.getCause().getMessage());
+            }
+            throw ex;
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public GetAirplaneResponse getAirplane(UUID id) {
         return service.find(id)
                 .map(factory.airplaneToResponse())
@@ -56,51 +76,58 @@ public class AirplaneRestController implements AirplaneController {
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public Response putAirplane(UUID typeId, UUID id, PutAirplaneRequest request) {
         try {
-            boolean exists = service.find(id).isPresent();
+            boolean exists = service.findForUpdate(id).isPresent();
 
-            if (!exists) {
+            if (exists) {
+                service.update(factory.requestToAirplane().apply(typeId, id, request));
+                return Response.ok().build();
+
+            }
+            else {
                 service.create(factory.requestToAirplane().apply(typeId, id, request));
                 return Response.created(URI.create(String.format("/api/planetypes/%s/airplanes/%s", typeId, id)))
                         .build();
             }
-            else {
-                return Response.noContent().build();
-            }
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
-                throw new BadRequestException(ex);
+                throw new BadRequestException(ex.getCause().getMessage());
             }
             throw ex;
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException(ex.getMessage());
         }
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public Response patchAirplane(UUID id, PatchAirplaneRequest request, UUID typeId) {
         try {
-            return service.find(id).map(entity -> {
+            return service.findForUpdate(id).map(entity -> {
                 service.update(factory.updateAirplane().apply(entity, request, typeId));
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
-                throw new BadRequestException(ex);
+                throw new BadRequestException(ex.getCause().getMessage());
             }
             throw ex;
         }
     }
 
     @Override
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public Response deleteAirplane(UUID id) {
         try {
-            return service.find(id).map(entity -> {
+            return service.findForUpdate(id).map(entity -> {
                 service.delete(id);
                 return Response.ok().build();
             }).orElseThrow(() -> new NotFoundException("Airplane with id %s not found".formatted(id)));
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
-                throw new BadRequestException(ex);
+                throw new BadRequestException(ex.getCause().getMessage());
             }
             throw ex;
         }

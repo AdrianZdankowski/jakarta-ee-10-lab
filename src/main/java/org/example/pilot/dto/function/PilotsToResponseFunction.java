@@ -14,6 +14,7 @@ public class PilotsToResponseFunction implements Function<List<Pilot>, GetPilots
                 .pilots(pilots.stream()
                         .map(pilot -> GetPilotsResponse.Pilot.builder()
                                 .id(pilot.getId())
+                                .login(pilot.getLogin())
                                 .pilotName(pilot.getPilotName())
                                 .build())
                         .toList())

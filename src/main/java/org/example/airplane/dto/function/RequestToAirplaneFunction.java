@@ -20,9 +20,6 @@ public class RequestToAirplaneFunction implements TriFunction<UUID, UUID ,PutAir
                 .planeType(PlaneType.builder()
                         .id(typeId)
                         .build())
-                .pilot(Pilot.builder()
-                        .id(request.getPilot())
-                        .build())
                 .build();
     }
 }

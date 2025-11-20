@@ -11,8 +11,9 @@ public class PilotToResponseFunction implements Function<Pilot, GetPilotResponse
     public GetPilotResponse apply(Pilot pilot) {
         return GetPilotResponse.builder()
                 .id(pilot.getId())
+                .login(pilot.getLogin())
                 .pilotName(pilot.getPilotName())
-                .role(pilot.getRole() != null ? pilot.getRole().name() : null)
+                .rank(pilot.getRank() != null ? pilot.getRank().name() : null)
                 .accountCreationDate(pilot.getAccountCreationDate())
                 .build();
     }

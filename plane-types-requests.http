@@ -1,18 +1,30 @@
-# Get all plane types
-
+### admin YWRtaW46YWRtaW5hZG1pbg== | user cm9iZXJ0OnVzZXJ1c2Vy | invalid aW52YWxpZDppbnZhbGlk
+# Get all plane types (user)
+// @no-cookie-jar
 GET http://localhost:9080/aviation/api/planetypes
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
+
+###
+
+# Get all plane types invalid credentials should fail
+// @no-cookie-jar
+GET http://localhost:9080/aviation/api/planetypes
+Authorization: Basic aW52YWxpZDppbnZhbGlk
 
 ###
 
 # Get single plane type
-
+// @no-cookie-jar
 GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 
 ###
 
-# Create new plane type
+# Create new plane type (user) should fail
+// @no-cookie-jar
 PUT http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
 Content-Type: application/json
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 
 {
     "name": "Amateur",
@@ -22,9 +34,25 @@ Content-Type: application/json
 
 ###
 
-# Update planetype
+# Create new plane type (admin)
+// @no-cookie-jar
+PUT http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+{
+    "name": "Amateur",
+    "numberOfEngines": 1,
+    "weight": 0.5
+}
+
+###
+
+# Update planetype (user) should fail
+// @no-cookie-jar
 PATCH http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
 Content-Type: application/json
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 
 {
     "name": "Training",
@@ -34,7 +62,36 @@ Content-Type: application/json
 
 ###
 
-# Delete plane type
+# Update planetype (admin)
+// @no-cookie-jar
+PATCH http://localhost:9080/aviation/api/planetypes/525d3e7b-bb1f-4c13-bf17-926d1a12e4c0
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+{
+    "name": "Training",
+    "numberOfEngines": 1,
+    "weight": 0.5
+}
+
+###
+
+# Delete plane type no credentials should fail
+// @no-cookie-jar
 DELETE http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748
+
+###
+
+# Delete plane type (user) should fail
+// @no-cookie-jar
+DELETE http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
+
+###
+
+# Delete plane type (admin)
+// @no-cookie-jar
+DELETE http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 
 ###

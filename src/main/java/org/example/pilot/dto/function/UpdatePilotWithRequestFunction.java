@@ -13,7 +13,7 @@ public class UpdatePilotWithRequestFunction implements BiFunction<Pilot, PatchPi
         return Pilot.builder()
                 .id(entity.getId())
                 .pilotName(request.getPilotName())
-                .role(PilotRank.valueOf(request.getRole().toUpperCase()))
+                .rank(PilotRank.valueOf(request.getRank().toUpperCase()))
                 .accountCreationDate(entity.getAccountCreationDate())
                 .build();
     }

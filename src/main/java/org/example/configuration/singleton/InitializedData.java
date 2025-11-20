@@ -1,86 +1,106 @@
-package org.example.configuration.observer;
+package org.example.configuration.singleton;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Initialized;
-import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.event.Observes;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.*;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.airplane.entity.Airplane;
 import org.example.airplane.entity.PlaneType;
-import org.example.airplane.service.AirplaneService;
-import org.example.airplane.service.PlaneTypeService;
+import org.example.airplane.repository.api.AirplaneRepository;
+import org.example.airplane.repository.api.PlaneTypeRepository;
 import org.example.pilot.entity.Pilot;
 import org.example.pilot.entity.PilotRank;
-import org.example.pilot.service.PilotService;
+import org.example.pilot.entity.PilotRoles;
+import org.example.pilot.repository.api.PilotRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.REQUIRED)
+@NoArgsConstructor(force = true)
+@DependsOn("InitializeAdminService")
 public class InitializedData {
-    private PilotService pilotService;
-    private PlaneTypeService planeTypeService;
-    private AirplaneService airplaneService;
-
-    private final RequestContextController requestContextController;
-
+    private PilotRepository pilotRepository;
+    private PlaneTypeRepository planeTypeRepository;
+    private AirplaneRepository airplaneRepository;
 
     @Inject
-    public InitializedData(
-            PilotService pilotService,
-            PlaneTypeService planeTypeService,
-            AirplaneService airplaneService,
-            RequestContextController requestContextController
-    ) {
-        this.pilotService = pilotService;
-        this.planeTypeService = planeTypeService;
-        this.airplaneService = airplaneService;
-        this.requestContextController = requestContextController;
+    private SecurityContext securityContext;
+
+    @Inject
+    @SuppressWarnings("CdiInjectionPointsInspection")
+    private Pbkdf2PasswordHash passwordHash;
+
+    @Inject
+    public void setPilotRepository(PilotRepository pilotRepository) {
+        this.pilotRepository = pilotRepository;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
+    @Inject
+    public void setAirplaneRepository(AirplaneRepository airplaneRepository) {
+        this.airplaneRepository = airplaneRepository;
     }
 
+    @Inject
+    public void setPlaneTypeRepository(PlaneTypeRepository planeTypeRepository) {
+        this.planeTypeRepository = planeTypeRepository;
+    }
+
+    @PostConstruct
     @SneakyThrows
     private void init() {
-        requestContextController.activate();
-
-        if (pilotService.find("Jan Kowalski").isEmpty()) {
+        if (pilotRepository.findByLogin("admin").isEmpty()) {
 
             Pilot general = Pilot.builder()
                     .id(UUID.fromString("39afa67e-1728-4050-8327-0cd92e715565"))
+                    .login("admin")
+                    .password(passwordHash.generate("adminadmin".toCharArray()))
+                    .roles(List.of(PilotRoles.ADMIN, PilotRoles.USER))
                     .pilotName("Jan Kowalski")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.CAPTAIN)
+                    .rank(PilotRank.CAPTAIN)
                     .build();
 
             Pilot major = Pilot.builder()
                     .id(UUID.fromString("cb7057a8-ff08-430a-a909-fdc84f177db3"))
+                    .login("robert")
+                    .password(passwordHash.generate("useruser".toCharArray()))
+                    .roles(List.of(PilotRoles.USER))
                     .pilotName("Robert Mak")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.MAJOR)
+                    .rank(PilotRank.MAJOR)
                     .build();
 
             Pilot officer = Pilot.builder()
                     .id(UUID.fromString("8c9ccdaa-c35f-496a-8e6b-d44a25e83be9"))
+                    .login("emilia")
+                    .password(passwordHash.generate("useruser".toCharArray()))
+                    .roles(List.of(PilotRoles.USER))
                     .pilotName("Emilia Earhart")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.OFFICER)
+                    .rank(PilotRank.OFFICER)
                     .build();
 
             Pilot otherPilot = Pilot.builder()
                     .id(UUID.fromString("3d85ad37-3d29-4f1a-b95d-7bd059304065"))
+                    .login("adam")
+                    .password(passwordHash.generate("useruser".toCharArray()))
+                    .roles(List.of(PilotRoles.USER))
                     .pilotName("Adam Nos")
                     .accountCreationDate(LocalDate.now())
-                    .role(PilotRank.OFFICER)
+                    .rank(PilotRank.OFFICER)
                     .build();
 
-            pilotService.create(general);
-            pilotService.create(major);
-            pilotService.create(officer);
-            pilotService.create(otherPilot);
+            pilotRepository.create(general);
+            pilotRepository.create(major);
+            pilotRepository.create(officer);
+            pilotRepository.create(otherPilot);
 
             PlaneType fighterAircraft = PlaneType.builder()
                     .id(UUID.fromString("63d6f249-48ab-4d71-85bb-34ed3bd1a748"))
@@ -103,9 +123,9 @@ public class InitializedData {
                     .numberOfEngines(4)
                     .build();
 
-            planeTypeService.create(fighterAircraft);
-            planeTypeService.create(passengerAircraft);
-            planeTypeService.create(transportAircraft);
+            planeTypeRepository.create(fighterAircraft);
+            planeTypeRepository.create(passengerAircraft);
+            planeTypeRepository.create(transportAircraft);
 
             Airplane f16 = Airplane.builder()
                     .id(UUID.fromString("59934c21-368b-48fc-905a-2f34575fdff1"))
@@ -152,13 +172,11 @@ public class InitializedData {
                     .pilot(otherPilot)
                     .build();
 
-            airplaneService.create(f16);
-            airplaneService.create(f35);
-            airplaneService.create(dreamliner);
-            airplaneService.create(airbus);
-            airplaneService.create(c130);
+            airplaneRepository.create(f16);
+            airplaneRepository.create(f35);
+            airplaneRepository.create(dreamliner);
+            airplaneRepository.create(airbus);
+            airplaneRepository.create(c130);
         }
-
-        requestContextController.deactivate();
     }
 }

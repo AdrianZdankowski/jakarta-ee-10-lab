@@ -2,10 +2,7 @@ package org.example.component;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.example.airplane.dto.function.*;
-import org.example.pilot.dto.function.PilotToResponseFunction;
-import org.example.pilot.dto.function.PilotsToResponseFunction;
-import org.example.pilot.dto.function.RequestToPilotFunction;
-import org.example.pilot.dto.function.UpdatePilotWithRequestFunction;
+import org.example.pilot.dto.function.*;
 
 @ApplicationScoped
 public class DtoFunctionFactory {
@@ -23,6 +20,10 @@ public class DtoFunctionFactory {
 
     public UpdatePilotWithRequestFunction updatePilot() {
         return new UpdatePilotWithRequestFunction();
+    }
+
+    public UpdatePilotPasswordWithRequestFunction updatePilotPassword() {
+        return new UpdatePilotPasswordWithRequestFunction();
     }
 
     public AirplaneToResponseFunction airplaneToResponse() {

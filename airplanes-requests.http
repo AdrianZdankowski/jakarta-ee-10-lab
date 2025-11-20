@@ -1,43 +1,92 @@
-# Get all airplanes
-
+### admin YWRtaW46YWRtaW5hZG1pbg== | user cm9iZXJ0OnVzZXJ1c2Vy | invalid aW52YWxpZDppbnZhbGlk
+# Get all airplanes, no credentials shoud fail
+//@no-cookie-jar
 GET http://localhost:9080/aviation/api/planetypes/airplanes
 
 ###
 
-# Get single airplane
+# Get all airplanes (admin)
+//@no-cookie-jar
+GET http://localhost:9080/aviation/api/planetypes/airplanes
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
+# Get single airplane, no credendials should fail
+//@no-cookie-jar
 
 GET http://localhost:9080/aviation/api/planetypes/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
 
 ###
 
-# Get all plane type airplanes
+# Get single airplane (user)
+//@no-cookie-jar
 
+GET http://localhost:9080/aviation/api/planetypes/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
+# Get all plane type airplanes (admin)
+//@no-cookie-jar
 GET http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 
 ###
 
-# Get all pilots airplanes
-
+# Get all pilots airplanes (admin, user)
+//@no-cookie-jar
 GET http://localhost:9080/aviation/api/pilots/39afa67e-1728-4050-8327-0cd92e715565/airplanes
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 
 ###
 
-# Create new airplane
+# Get all pilots airplanes (user)
+//@no-cookie-jar
+GET http://localhost:9080/aviation/api/pilots/cb7057a8-ff08-430a-a909-fdc84f177db3/airplanes
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 
+###
+
+# Get all pilots airplanes, wrong user
+//@no-cookie-jar
+GET http://localhost:9080/aviation/api/pilots/39afa67e-1728-4050-8327-0cd92e715565/airplanes
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
+
+###
+
+# Create new airplane (user)
+//@no-cookie-jar
 PUT http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 Content-Type: application/json
 
 {
     "name": "SU-57 Felon",
     "yearOfProduction": 2025,
-    "flightHours": 160,
-    "pilot": "39afa67e-1728-4050-8327-0cd92e715565"
+    "flightHours": 160
 }
 
 ###
 
-# Update airplane
-PATCH  http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+# Create new airplane invalid credentials should fail
+//@no-cookie-jar
+PUT http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/3c6f1eb1-8069-44ab-988f-d7fed2b65d87
+Authorization: Basic aW52YWxpZDppbnZhbGlk
+Content-Type: application/json
+
+{
+    "name": "SU-57 Felon",
+    "yearOfProduction": 2025,
+    "flightHours": 160
+}
+
+###
+
+
+# Update airplane, no credentials should fail
+//@no-cookie-jar
+PATCH  http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/78fa23b8-152d-47a1-aa8e-d11aa412aa64
 Content-Type: application/json
 
 {
@@ -48,7 +97,71 @@ Content-Type: application/json
 
 ###
 
-# Delete airplane
+# Update airplane (admin)
+//@no-cookie-jar
+PATCH  http://localhost:9080/aviation/api/planetypes/63d6f249-48ab-4d71-85bb-34ed3bd1a748/airplanes/78fa23b8-152d-47a1-aa8e-d11aa412aa64
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+Content-Type: application/json
+
+{
+    "name": "Eurofighter typhoon",
+    "yearOfProduction": 2018,
+    "flightHours": 785
+}
+
+###
+
+# Update airplane (user)
+//@no-cookie-jar
+PATCH  http://localhost:9080/aviation/api/planetypes/c8e3e5ec-ee6d-4841-8f73-188dcd8a05b8/airplanes/366830cd-ecb5-4bc6-9d55-60a06a13994f
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
+Content-Type: application/json
+
+{
+    "name": "Duzy samolot",
+    "yearOfProduction": 2018,
+    "flightHours": 785
+}
+
+###
+
+# Update airplane wrong user, should fail
+//@no-cookie-jar
+PATCH  http://localhost:9080/aviation/api/planetypes/c8e3e5ec-ee6d-4841-8f73-188dcd8a05b8/airplanes/366830cd-ecb5-4bc6-9d55-60a06a13994f
+Authorization: Basic YWRhbTp1c2VydXNlcg==
+Content-Type: application/json
+
+{
+    "name": "Duzy samolot",
+    "yearOfProduction": 2018,
+    "flightHours": 785
+}
+
+###
+
+# Delete airplane, no credentials should fail
+//@no-cookie-jar
 DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
+
+###
+
+# Delete airplane wrong user, should fail
+//@no-cookie-jar
+DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
+
+###
+
+# Delete airplane (admin)
+//@no-cookie-jar
+DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/59934c21-368b-48fc-905a-2f34575fdff1
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
+# Delete airplane (user)
+//@no-cookie-jar
+DELETE  http://localhost:9080/aviation/api/planetypes/airplanes/366830cd-ecb5-4bc6-9d55-60a06a13994f
+Authorization: Basic cm9iZXJ0OnVzZXJ1c2Vy
 
 ###
