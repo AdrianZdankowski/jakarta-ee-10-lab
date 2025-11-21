@@ -18,6 +18,12 @@
     </h:head>
 
     <h:body>
+        <!-- By defailt channel is application scoped.-->
+        <f:websocket channel="broadcastChannel" scope="application" onmessage="receive"/>
+        <!-- By defailt user channel is session scoped.-->
+        <f:websocket rendered="#{facesContext.externalContext.userPrincipal != null}" channel="userChannel"
+                     user="#{facesContext.externalContext.userPrincipal.name}" onmessage="receive"/>
+
         <div class="container">
             <header class="mb-4 mt-4 d-flex align-items-center">
                 <h:graphicImage class="logo" library="default" name="img/logo_#{view.locale.language}.png" alt="#{messages['logo.text']} logo"/>
@@ -47,6 +53,13 @@
             <main class="mb-4 mt-4">
                 <ui:insert name="content"/>
             </main>
+
+            <aside>
+                <div class="form-outline">
+                    <textarea class="form-control" rows="4" id="messageContainer" readonly="readonly"/>
+                    <label for="messageContainer" class="form-label">#{messages.messages}</label>
+                </div>
+            </aside>
 
             <footer class="text-center text-lg-start bg-light text-muted p-2">
                 <div class="text-center">
