@@ -5,7 +5,6 @@
                 xmlns:f="jakarta.faces.core"
                 template="/WEB-INF/template/main.xhtml">
 
-    <!-- Parametr ID samolotu + wywołanie init() -->
     <f:metadata>
         <f:viewParam name="id" value="#{airplaneEdit.id}" required="true"/>
         <f:event type="preRenderView" listener="#{airplaneEdit.init}" />

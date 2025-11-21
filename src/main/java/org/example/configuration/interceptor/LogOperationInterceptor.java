@@ -11,22 +11,14 @@ import org.example.configuration.interceptor.binding.LogOperation;
 import java.util.UUID;
 import java.util.logging.Level;
 
-/**
- * Interceptor for logging operations.
- */
 @Log
 public class LogOperationInterceptor {
 
-    /**
-     * Security context.
-     */
     @Inject
     private SecurityContext securityContext;
 
     @AroundInvoke
     public Object invoke(InvocationContext context) throws Exception {
-        System.out.println("=== INTERCEPTOR INVOKED ===");
-        
         String operationName = context.getMethod().getAnnotation(LogOperation.class).value();
         String userName = securityContext != null && securityContext.getCallerPrincipal() != null 
                 ? securityContext.getCallerPrincipal().getName() 
@@ -45,12 +37,6 @@ public class LogOperationInterceptor {
         return result;
     }
 
-    /**
-     * Extract resource ID from method parameters.
-     * 
-     * @param context invocation context
-     * @return resource ID
-     */
     private UUID extractResourceId(InvocationContext context) {
         Object[] parameters = context.getParameters();
         if (parameters.length > 0) {
