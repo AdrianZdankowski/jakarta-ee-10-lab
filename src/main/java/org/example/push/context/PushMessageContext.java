@@ -13,15 +13,15 @@ import org.example.push.dto.Message;
 @NoArgsConstructor(force = true)
 public class PushMessageContext {
     private PushContext broadcastChannel;
-    private PushContext pilotChannel;
+    private PushContext userChannel;
 
     @Inject
     public PushMessageContext(
             @Push(channel = "broadcastChannel") PushContext broadcastChannel,
-            @Push(channel = "pilotChannel") PushContext pilotChannel
+            @Push(channel = "userChannel") PushContext userChannel
     ) {
         this.broadcastChannel = broadcastChannel;
-        this.pilotChannel = pilotChannel;
+        this.userChannel = userChannel;
     }
 
     public void notifyAll(Message message) {
@@ -29,6 +29,6 @@ public class PushMessageContext {
     }
 
     public void notifyPilot(Message message, String pilotname) {
-        pilotChannel.send(message, pilotname);
+        userChannel.send(message, pilotname);
     }
 }

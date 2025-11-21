@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+        <article>
+            <header><h2>Chat</h2></header>
+
+            <section>
+                <div class="mb-4">
+                    <h:form id="chatForm">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="form-outline">
+                                    <h:inputText id="chatMessage" value="#{chatView.messageContent}" 
+                                                 styleClass="form-control" 
+                                                 placeholder="Type your message..."/>
+                                    <label for="chatMessage" class="form-label">Message</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-outline">
+                                    <h:selectOneMenu id="chatRecipient" value="#{chatView.recipient}" 
+                                                     styleClass="form-select">
+                                        <f:selectItem itemValue="" itemLabel="All users"/>
+                                        <f:selectItems value="#{chatView.pilots}" 
+                                                      var="pilot" 
+                                                      itemValue="#{pilot.login}" 
+                                                      itemLabel="#{pilot.login}"/>
+                                    </h:selectOneMenu>
+                                    <label for="chatRecipient" class="form-label">To</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <h:commandButton value="Send Message" 
+                                                styleClass="btn btn-primary">
+                                    <f:ajax execute="@form" 
+                                           listener="#{chatView.sendMessage()}" 
+                                           render="chatMessage chatRecipient"/>
+                                </h:commandButton>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-outline">
+                        <textarea class="form-control" rows="15" id="messageContainer" readonly="readonly"></textarea>
+                        <label for="messageContainer" class="form-label">#{messages.messages}</label>
+                    </div>
+                </div>
+            </section>
+        </article>
+    </ui:define>
+</ui:composition>
