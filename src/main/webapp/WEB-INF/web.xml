@@ -63,4 +63,9 @@
         <role-name>user</role-name>
     </security-role>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.xhtml</location>
+    </error-page>
+
 </web-app>
