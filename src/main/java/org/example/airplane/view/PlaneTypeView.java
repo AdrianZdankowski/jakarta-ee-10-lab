@@ -52,14 +52,12 @@ public class PlaneTypeView implements Serializable {
 
     public void init() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
-        
-        // Check if user is authenticated
+
         if (context.getExternalContext().getUserPrincipal() == null) {
             context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/planetype/planetype_list.xhtml");
             return;
         }
-        
-        // Validate id parameter
+
         if (id == null) {
             context.getExternalContext().responseSendError(HttpServletResponse.SC_BAD_REQUEST, "Missing plane type id");
             return;
@@ -67,7 +65,6 @@ public class PlaneTypeView implements Serializable {
         
         Optional<PlaneType> planeType = planeTypeService.find(id);
         if (planeType.isPresent()) {
-            // Create model without airplanes first
             this.planeType = PlaneTypeModel.builder()
                     .id(planeType.get().getId())
                     .name(planeType.get().getName())
@@ -75,7 +72,6 @@ public class PlaneTypeView implements Serializable {
                     .weight(planeType.get().getWeight())
                     .build();
 
-            // Fetch airplanes using service method which applies role-based filtering
             airplaneService.findAllByPlaneType(id)
                     .ifPresent(airplanes ->
                             this.planeType.setAirplanes(
@@ -91,7 +87,6 @@ public class PlaneTypeView implements Serializable {
 
     public void deleteAirplane(UUID id) {
         airplaneService.delete(id);
-        // Reload airplanes list
         airplaneService.findAllByPlaneType(this.id)
                 .ifPresent(airplanes ->
                         this.planeType.setAirplanes(

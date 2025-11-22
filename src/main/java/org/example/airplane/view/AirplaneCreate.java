@@ -49,8 +49,7 @@ public class AirplaneCreate implements Serializable {
 
     public void init() throws java.io.IOException {
         jakarta.faces.context.FacesContext context = jakarta.faces.context.FacesContext.getCurrentInstance();
-        
-        // Check if user is authenticated
+
         if (context.getExternalContext().getUserPrincipal() == null) {
             context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/planetype/planetype_list.xhtml");
             return;
