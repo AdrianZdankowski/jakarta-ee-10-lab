@@ -48,8 +48,12 @@ public class ChatMessageObserver {
             // Broadcast to all users
             pushMessageContext.notifyAll(message);
         } else {
-            // Send to specific user
+            // Send to specific user (recipient)
             pushMessageContext.notifyPilot(message, chatMessage.getTo());
+            // Also send to sender so they see their own message
+            if (!chatMessage.getFrom().equals(chatMessage.getTo())) {
+                pushMessageContext.notifyPilot(message, chatMessage.getFrom());
+            }
         }
     }
 
