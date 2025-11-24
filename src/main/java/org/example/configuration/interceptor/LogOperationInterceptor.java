@@ -11,7 +11,6 @@ import org.example.configuration.interceptor.binding.LogOperation;
 import java.util.UUID;
 import java.util.logging.Level;
 
-@Log
 public class LogOperationInterceptor {
 
     @Inject
@@ -35,8 +34,7 @@ public class LogOperationInterceptor {
                 userName, operationName, resourceId);
         
         System.out.println(logMessage);
-        log.log(Level.INFO, logMessage);
-        
+
         return result;
     }
 

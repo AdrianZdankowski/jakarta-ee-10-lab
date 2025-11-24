@@ -24,7 +24,6 @@ function appendLine(line) {
     let textarea = document.getElementById('messageContainer');
     if (textarea) {
         textarea.value += line + '\n';
-        // Auto-scroll to bottom
         textarea.scrollTop = textarea.scrollHeight;
     }
 }

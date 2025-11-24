@@ -5,17 +5,13 @@ import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
 import org.example.chat.domain.ChatMessage;
 import org.example.chat.event.ChatMessageEvent;
 
 import java.util.logging.Level;
 
-/**
- * Service layer for chat functionality.
- */
+
 @ApplicationScoped
-@Log
 @NoArgsConstructor(force = true)
 public class ChatService {
 
@@ -56,10 +52,7 @@ public class ChatService {
                 .content(content)
                 .to(recipient)
                 .build();
-        
-        log.log(Level.INFO, "Sending chat message from " + sender + " to " + 
-                (recipient == null || recipient.isEmpty() ? "ALL" : recipient));
-        
+
         chatMessageEvent.fire(message);
     }
 
