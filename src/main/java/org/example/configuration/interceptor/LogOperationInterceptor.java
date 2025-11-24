@@ -19,6 +19,9 @@ public class LogOperationInterceptor {
 
     @AroundInvoke
     public Object invoke(InvocationContext context) throws Exception {
+
+         System.out.println("=== INTERCEPTOR ===");
+
         String operationName = context.getMethod().getAnnotation(LogOperation.class).value();
         String userName = securityContext != null && securityContext.getCallerPrincipal() != null 
                 ? securityContext.getCallerPrincipal().getName() 

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
                 xmlns:f="jakarta.faces.core"
                 template="/WEB-INF/template/main.xhtml">
 
     <ui:define name="content">
-        <f:loadBundle var="msg" basename="org.example.authentication.view.i18n.messages"/>
-        <article class="text--justified">
-            <header><h2>#{msg.error}</h2></header>
+        <article class="">
+            <header>
+                <h2>#{messages['notfound.text']}</h2>
+            </header>
             <section>
-
+                <p>#{messages['notfound.description']}</p>
             </section>
         </article>
     </ui:define>
-
 </ui:composition>
