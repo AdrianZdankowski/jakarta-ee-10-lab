@@ -17,27 +17,26 @@
                                 <div class="form-outline">
                                     <h:inputText id="chatMessage" value="#{chatView.messageContent}" 
                                                  styleClass="form-control" 
-                                                 placeholder="Type your message..."/>
-                                    <label for="chatMessage" class="form-label">Message</label>
+                                                 placeholder="#{messages.placeholder}"/>
+                                    <label for="chatMessage" class="form-label">#{messages.message}</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-outline">
                                     <h:selectOneMenu id="chatRecipient" value="#{chatView.recipient}" 
                                                      styleClass="form-select">
-                                        <f:selectItem itemValue="" itemLabel="All users"/>
+                                        <f:selectItem itemValue="" itemLabel="#{messages.users}"/>
                                         <f:selectItems value="#{chatView.pilots}" 
                                                       var="pilot" 
                                                       itemValue="#{pilot.login}" 
                                                       itemLabel="#{pilot.login}"/>
                                     </h:selectOneMenu>
-                                    <label for="chatRecipient" class="form-label">To</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <h:commandButton value="Send Message" 
+                                <h:commandButton value="#{messages.send}"
                                                 styleClass="btn btn-primary">
                                     <f:ajax execute="@form" 
                                            listener="#{chatView.sendMessage()}" 
@@ -50,8 +49,8 @@
 
                 <div class="mb-3">
                     <div class="form-outline">
+                        <p>#{messages.messages}</p>
                         <textarea class="form-control" rows="15" id="messageContainer" readonly="readonly"></textarea>
-                        <label for="messageContainer" class="form-label">#{messages.messages}</label>
                     </div>
                 </div>
             </section>

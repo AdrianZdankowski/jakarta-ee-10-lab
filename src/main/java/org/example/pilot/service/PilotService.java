@@ -48,7 +48,7 @@ public class PilotService {
         return repository.findByLogin(login);
     }
 
-    @RolesAllowed(PilotRoles.ADMIN)
+    @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
     public List<Pilot> findAll() {
         return repository.findAll();
     }
