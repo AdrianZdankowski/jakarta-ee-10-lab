@@ -43,13 +43,26 @@ public class AirplaneView implements Serializable {
     }
 
     public void init() throws IOException {
-        Optional<Airplane> entity = service.find(id);
-        if (entity.isPresent()) {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getExternalContext().getUserPrincipal() == null) {
+            context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/planetype/planetype_list.xhtml");
+            return;
+        }
+        
+        try {
+            if (id == null) {
+                throw new IllegalArgumentException("Missing airplane id");
+            }
+            
+            Optional<Airplane> entity = service.find(id);
+            if (entity.isEmpty()) {
+                throw new IllegalArgumentException("Airplane not found");
+            }
+            
             this.airplane = factory.airplaneToModel().apply(entity.get());
-        } else {
-            FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .responseSendError(HttpServletResponse.SC_NOT_FOUND, "Airplane not found");
+        } catch (IllegalArgumentException e) {
+            context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/error/404.xhtml");
         }
     }
 }

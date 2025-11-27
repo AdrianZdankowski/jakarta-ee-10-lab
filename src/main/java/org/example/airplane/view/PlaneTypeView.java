@@ -51,9 +51,26 @@ public class PlaneTypeView implements Serializable {
     }
 
     public void init() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getExternalContext().getUserPrincipal() == null) {
+            context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/planetype/planetype_list.xhtml");
+            return;
+        }
+
+        if (id == null) {
+            context.getExternalContext().responseSendError(HttpServletResponse.SC_BAD_REQUEST, "Missing plane type id");
+            return;
+        }
+        
         Optional<PlaneType> planeType = planeTypeService.find(id);
         if (planeType.isPresent()) {
-            this.planeType = factory.planeTypeToModel().apply(planeType.get());
+            this.planeType = PlaneTypeModel.builder()
+                    .id(planeType.get().getId())
+                    .name(planeType.get().getName())
+                    .numberOfEngines(planeType.get().getNumberOfEngines())
+                    .weight(planeType.get().getWeight())
+                    .build();
 
             airplaneService.findAllByPlaneType(id)
                     .ifPresent(airplanes ->
@@ -64,15 +81,20 @@ public class PlaneTypeView implements Serializable {
                             )
                     );
         } else {
-            FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .responseSendError(HttpServletResponse.SC_NOT_FOUND, "Plane type not found");
+            context.getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Plane type not found");
         }
     }
 
-    public String deleteAirplane(UUID id) {
+    public void deleteAirplane(UUID id) {
         airplaneService.delete(id);
-        return "planetype_view?faces-redirect=true&amp;id=" + planeType.getId();
+        airplaneService.findAllByPlaneType(this.id)
+                .ifPresent(airplanes ->
+                        this.planeType.setAirplanes(
+                                airplanes.stream()
+                                        .map(factory.airplaneToModel())
+                                        .toList()
+                        )
+                );
     }
 
 }

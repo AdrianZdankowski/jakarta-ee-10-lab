@@ -5,6 +5,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.airplane.entity.Airplane;
@@ -47,19 +48,36 @@ public class AirplaneEdit implements Serializable {
     }
 
     public void init() throws IOException {
-        Optional<Airplane> entity = airplaneService.find(id);
-        if (entity.isPresent()) {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getExternalContext().getUserPrincipal() == null) {
+            context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/planetype/planetype_list.xhtml");
+            return;
+        }
+        
+        try {
+            if (id == null) {
+                throw new IllegalArgumentException("Missing airplane id");
+            }
+            
+            Optional<Airplane> entity = airplaneService.find(id);
+            if (entity.isEmpty()) {
+                throw new IllegalArgumentException("Airplane not found");
+            }
+            
             this.airplane = factory.airplaneToEditModel().apply(entity.get());
             this.planeType = factory.planeTypeToModel().apply(entity.get().getPlaneType());
-        } else {
-            FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .responseSendError(404, "Airplane not found");
+        } catch (IllegalArgumentException e) {
+            context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/error/404.xhtml");
         }
     }
 
     public String saveAction() {
-        airplaneService.update(factory.updateAirplane().apply(airplaneService.find(id).orElseThrow(), airplane));
-        return "/planetype/planetype_view.xhtml?id=" + planeType.getId() + "&faces-redirect=true";
+        try {
+            airplaneService.update(factory.updateAirplane().apply(airplaneService.find(id).orElseThrow(), airplane));
+            return "/planetype/planetype_view.xhtml?id=" + planeType.getId() + "&faces-redirect=true";
+        } catch (IllegalArgumentException e) {
+            return "/error/404.xhtml?faces-redirect=true";
+        }
     }
 }

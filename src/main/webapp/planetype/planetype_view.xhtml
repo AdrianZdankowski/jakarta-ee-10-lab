@@ -13,60 +13,63 @@
     <ui:define name="content">
 
         <article>
-            <header><h2>Plane Type Details</h2></header>
+            <header><h2>#{airplaneMessages['planetype.view.title']}</h2></header>
 
             <h:panelGrid columns="2" columnClasses="label,value">
-                <h:outputText value="Name:"/>
+                <h:outputText value="#{airplaneMessages['planetype.view.label.name']}"/>
                 <h:outputText value="#{planeTypeView.planeType.name}"/>
 
-                <h:outputText value="Number of engines:"/>
+                <h:outputText value="#{airplaneMessages['planetype.view.label.engines']}"/>
                 <h:outputText value="#{planeTypeView.planeType.numberOfEngines}"/>
 
-                <h:outputText value="Weight:"/>
+                <h:outputText value="#{airplaneMessages['planetype.view.label.weight']}"/>
                 <h:outputText value="#{planeTypeView.planeType.weight}"/>
             </h:panelGrid>
 
-            <h3>Airplanes of this type:</h3>
-            <h:dataTable value="#{planeTypeView.planeType.airplanes}" var="airplane"
+            <h3>#{airplaneMessages['planetype.view.airplanes.title']}</h3>
+            <h:panelGroup id="airplanesTableWrapper">
+                <h:dataTable value="#{planeTypeView.planeType.airplanes}" var="airplane"
                          styleClass="table table-striped table-hover">
                 <h:column>
-                    <f:facet name="header">Name</f:facet>
+                    <f:facet name="header">#{airplaneMessages['planetype.view.airplanes.column.name']}</f:facet>
                     <h:outputText value="#{airplane.name}"/>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">View</f:facet>
-                    <h:link value="View" outcome="/airplane/airplane_view.xhtml">
+                    <f:facet name="header">#{airplaneMessages['planetype.view.airplanes.column.view']}</f:facet>
+                    <h:link value="#{airplaneMessages['planetype.view.airplanes.action.view']}" outcome="/airplane/airplane_view.xhtml">
                         <f:param name="id" value="#{airplane.id}" />
                     </h:link>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Edit</f:facet>
-                    <h:link value="Edit" outcome="/airplane/airplane_edit.xhtml">
+                    <f:facet name="header">#{airplaneMessages['planetype.view.airplanes.column.edit']}</f:facet>
+                    <h:link value="#{airplaneMessages['planetype.view.airplanes.action.edit']}" outcome="/airplane/airplane_edit.xhtml">
                         <f:param name="id" value="#{airplane.id}" />
                     </h:link>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Delete</f:facet>
+                    <f:facet name="header">#{airplaneMessages['planetype.view.airplanes.column.delete']}</f:facet>
                     <h:form>
-                        <h:commandButton value="Delete"
+                        <h:commandButton value="#{airplaneMessages['planetype.view.airplanes.action.delete']}"
                                          styleClass="btn"
-                                         action="#{planeTypeView.deleteAirplane(airplane.id)}">
+                                         actionListener="#{planeTypeView.deleteAirplane(airplane.id)}">
+                            <f:ajax execute="@this" render="airplanesTableWrapper"/>
                         </h:commandButton>
                     </h:form>
                 </h:column>
 
                 <f:facet name="footer">
                     <h:button styleClass="btn" outcome="/planetype/planetype_list.xhtml"
-                              value="Back to list"/>
+                              value="#{airplaneMessages['planetype.view.action.back']}"/>
 
                     <h:button styleClass="btn" outcome="/airplane/airplane_create.xhtml"
-                              value="Create new airplane"/>
+                              value="#{airplaneMessages['planetype.view.action.create']}"/>
                 </f:facet>
 
             </h:dataTable>
+            </h:panelGroup>
 
         </article>
     </ui:define>

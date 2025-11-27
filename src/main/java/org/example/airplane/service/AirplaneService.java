@@ -4,8 +4,11 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
+import org.example.configuration.interceptor.LogOperationInterceptor;
+import org.example.configuration.interceptor.binding.LogOperation;
 import org.example.pilot.entity.PilotRoles;
 import org.example.airplane.entity.Airplane;
 import org.example.airplane.entity.PlaneType;
@@ -76,6 +79,8 @@ public class AirplaneService {
     }
 
     @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
+    @Interceptors(LogOperationInterceptor.class)
+    @LogOperation("CREATE_AIRPLANE")
     public void create(Airplane airplane) {
         if (airplaneRepository.find(airplane.getId()).isPresent()) {
             throw new IllegalArgumentException("Airplane already exists.");
@@ -98,6 +103,8 @@ public class AirplaneService {
     }
 
     @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
+    @Interceptors(LogOperationInterceptor.class)
+    @LogOperation("UPDATE_AIRPLANE")
     public void update(Airplane airplane) {
         Airplane existingAirplane = airplaneRepository.find(airplane.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Airplane not found"));
@@ -118,6 +125,8 @@ public class AirplaneService {
     }
 
     @RolesAllowed({PilotRoles.ADMIN, PilotRoles.USER})
+    @Interceptors(LogOperationInterceptor.class)
+    @LogOperation("DELETE_AIRPLANE")
     public void delete(UUID id) {
         Airplane airplane = airplaneRepository.find(id)
                 .orElseThrow(() -> new IllegalArgumentException("Airplane not found."));

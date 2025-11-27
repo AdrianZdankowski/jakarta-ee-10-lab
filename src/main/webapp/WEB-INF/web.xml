@@ -20,6 +20,11 @@
         <param-value>Development</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>jakarta.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>facesServlet</servlet-name>
         <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
@@ -36,8 +41,8 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>airplane</web-resource-name>
-            <url-pattern>/airplane/*</url-pattern>
+            <web-resource-name>planetype</web-resource-name>
+            <url-pattern>/planetype/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>user</role-name>
@@ -54,6 +59,16 @@
         </auth-constraint>
     </security-constraint>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>chat</web-resource-name>
+            <url-pattern>/chat/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+        </auth-constraint>
+    </security-constraint>
+
 
     <security-role>
         <role-name>admin</role-name>
@@ -62,5 +77,10 @@
     <security-role>
         <role-name>user</role-name>
     </security-role>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.xhtml</location>
+    </error-page>
 
 </web-app>
