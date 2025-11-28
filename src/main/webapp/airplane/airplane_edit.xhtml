@@ -17,26 +17,35 @@
 
             <h:messages globalOnly="true" styleClass="alert alert-danger" showSummary="true" showDetail="true"/>
 
-            <h:form styleClass="form">
+            <h:form id="editForm" styleClass="form">
 
                 <h:inputHidden value="#{airplaneEdit.airplane.id}"/>
 
                 <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
 
                     <h:outputLabel for="name" value="#{airplaneMessages['airplane.edit.label.name']}"/>
-                    <h:inputText id="name"
-                                 value="#{airplaneEdit.airplane.name}"
-                                 required="true"/>
+                    <h:panelGroup>
+                        <h:inputText id="name"
+                                     value="#{airplaneEdit.airplane.name}"
+                                     required="true"/>
+                        <h:message for="name" styleClass="text-warning d-block mt-1" showSummary="true" showDetail="false"/>
+                    </h:panelGroup>
 
                     <h:outputLabel for="year" value="#{airplaneMessages['airplane.edit.label.year']}"/>
-                    <h:inputText id="year"
-                                 value="#{airplaneEdit.airplane.yearOfProduction}"
-                                 required="true"/>
+                    <h:panelGroup>
+                        <h:inputText id="year"
+                                     value="#{airplaneEdit.airplane.yearOfProduction}"
+                                     required="true"/>
+                        <h:message for="year" styleClass="text-warning d-block mt-1" showSummary="true" showDetail="false"/>
+                    </h:panelGroup>
 
                     <h:outputLabel for="hours" value="#{airplaneMessages['airplane.edit.label.hours']}"/>
-                    <h:inputText id="hours"
-                                 value="#{airplaneEdit.airplane.flightHours}"
-                                 required="true"/>
+                    <h:panelGroup>
+                        <h:inputText id="hours"
+                                     value="#{airplaneEdit.airplane.flightHours}"
+                                     required="true"/>
+                        <h:message for="hours" styleClass="text-warning d-block mt-1" showSummary="true" showDetail="false"/>
+                    </h:panelGroup>
 
                     <h:outputLabel for="type" value="#{airplaneMessages['airplane.edit.label.type']}"/>
                     <h:outputText id="type" value="#{airplaneEdit.planeType.name}"/>

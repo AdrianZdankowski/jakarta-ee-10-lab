@@ -27,7 +27,6 @@ import java.util.UUID;
 @Named
 public class AirplaneEdit implements Serializable {
     private AirplaneService airplaneService;
-//    private final PlaneTypeService planeTypeService;
     private final ModelFunctionFactory factory;
 
     private final FacesContext facesContext;
@@ -79,28 +78,51 @@ public class AirplaneEdit implements Serializable {
     }
 
     public String saveAction() throws IOException {
+        // Zapisz wprowadzone dane użytkownika przed odświeżeniem
+        String userEnteredName = airplane.getName();
+        Integer userEnteredYear = airplane.getYearOfProduction();
+        Integer userEnteredHours = airplane.getFlightHours();
+        
         try {
             airplaneService.update(factory.updateAirplane().apply(airplaneService.find(id).orElseThrow(), airplane));
             return "/planetype/planetype_view.xhtml?id=" + planeType.getId() + "&faces-redirect=true";
         } catch (EJBException ex) {
             if (ex.getCause() instanceof OptimisticLockException) {
                 init();
-                facesContext.addMessage(null, new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR,
-                    "Konflikt wersji",
-                    "Samolot został zmodyfikowany przez innego użytkownika. Dane zostały odświeżone, wprowadź zmiany ponownie."
-                ));
+                addOptimisticLockMessages(userEnteredName, userEnteredYear, userEnteredHours);
                 return null;
             }
             throw ex;
         } catch (OptimisticLockException ex) {
             init();
-            facesContext.addMessage(null, new FacesMessage(
-                FacesMessage.SEVERITY_ERROR,
-                "Konflikt wersji",
-                "Samolot został zmodyfikowany przez innego użytkownika. Dane zostały odświeżone, wprowadź zmiany ponownie."
-            ));
+            addOptimisticLockMessages(userEnteredName, userEnteredYear, userEnteredHours);
             return null;
         }
+    }
+
+    private void addOptimisticLockMessages(String userEnteredName, Integer userEnteredYear, Integer userEnteredHours) {
+        facesContext.addMessage(null, new FacesMessage(
+            FacesMessage.SEVERITY_ERROR,
+            "Konflikt wersji",
+            "Samolot został zmodyfikowany przez innego użytkownika. Dane zostały odświeżone."
+        ));
+        
+        facesContext.addMessage("editForm:name", new FacesMessage(
+            FacesMessage.SEVERITY_WARN,
+            "Twoja zmiana: " + userEnteredName,
+            "Wartość została nadpisana"
+        ));
+        
+        facesContext.addMessage("editForm:year", new FacesMessage(
+            FacesMessage.SEVERITY_WARN,
+            "Twoja zmiana: " + userEnteredYear,
+            "Wartość została nadpisana"
+        ));
+        
+        facesContext.addMessage("editForm:hours", new FacesMessage(
+            FacesMessage.SEVERITY_WARN,
+            "Twoja zmiana: " + userEnteredHours,
+            "Wartość została nadpisana"
+        ));
     }
 }
