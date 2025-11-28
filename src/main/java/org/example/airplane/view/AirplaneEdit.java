@@ -1,6 +1,7 @@
 package org.example.airplane.view;
 
 import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -8,7 +9,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.TransactionalException;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.airplane.entity.Airplane;
@@ -82,11 +82,24 @@ public class AirplaneEdit implements Serializable {
         try {
             airplaneService.update(factory.updateAirplane().apply(airplaneService.find(id).orElseThrow(), airplane));
             return "/planetype/planetype_view.xhtml?id=" + planeType.getId() + "&faces-redirect=true";
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof OptimisticLockException) {
                 init();
-                facesContext.addMessage(null, new FacesMessage("Version collision."));
+                facesContext.addMessage(null, new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR,
+                    "Konflikt wersji",
+                    "Samolot został zmodyfikowany przez innego użytkownika. Dane zostały odświeżone, wprowadź zmiany ponownie."
+                ));
+                return null;
             }
+            throw ex;
+        } catch (OptimisticLockException ex) {
+            init();
+            facesContext.addMessage(null, new FacesMessage(
+                FacesMessage.SEVERITY_ERROR,
+                "Konflikt wersji",
+                "Samolot został zmodyfikowany przez innego użytkownika. Dane zostały odświeżone, wprowadź zmiany ponownie."
+            ));
             return null;
         }
     }
