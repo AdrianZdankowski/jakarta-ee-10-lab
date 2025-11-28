@@ -4,6 +4,9 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.example.airplane.entity.Airplane;
 import org.example.airplane.entity.PlaneType;
 import org.example.airplane.repository.api.AirplaneRepository;
@@ -25,10 +28,15 @@ public class AirplanePersistenceRepository implements AirplaneRepository {
     @Override
     public Optional<Airplane> findByIdAndPilot(UUID id, Pilot pilot) {
         try {
-            return Optional.of(em.createQuery("select a from Airplane a where a.id = :id and a.pilot = :pilot", Airplane.class)
-                    .setParameter("pilot", pilot)
-                    .setParameter("id", id)
-                    .getSingleResult());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Airplane> query = cb.createQuery(Airplane.class);
+            Root<Airplane> root = query.from(Airplane.class);
+            query.select(root)
+                .where(cb.and(
+                    cb.equal(root.get("id"), id),
+                    cb.equal(root.get("pilot"), pilot)
+                ));
+            return Optional.of(em.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -36,16 +44,22 @@ public class AirplanePersistenceRepository implements AirplaneRepository {
 
     @Override
     public List<Airplane> findAllByPilot(Pilot pilot) {
-        return em.createQuery("select a from Airplane a where a.pilot = :pilot", Airplane.class)
-                .setParameter("pilot", pilot)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Airplane> query = cb.createQuery(Airplane.class);
+        Root<Airplane> root = query.from(Airplane.class);
+        query.select(root)
+            .where(cb.equal(root.get("pilot"), pilot));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Airplane> findAllByPlaneType(PlaneType planeType) {
-        return em.createQuery("select a from Airplane a where a.planeType = :planeType", Airplane.class)
-                .setParameter("planeType", planeType)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Airplane> query = cb.createQuery(Airplane.class);
+        Root<Airplane> root = query.from(Airplane.class);
+        query.select(root)
+            .where(cb.equal(root.get("planeType"), planeType));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
@@ -55,7 +69,11 @@ public class AirplanePersistenceRepository implements AirplaneRepository {
 
     @Override
     public List<Airplane> findAll() {
-        return em.createQuery("select a from Airplane a", Airplane.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Airplane> query = cb.createQuery(Airplane.class);
+        Root<Airplane> root = query.from(Airplane.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override

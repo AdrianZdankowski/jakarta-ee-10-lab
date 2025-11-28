@@ -3,6 +3,9 @@ package org.example.airplane.repository.persistence;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.example.airplane.entity.PlaneType;
 import org.example.airplane.repository.api.PlaneTypeRepository;
 
@@ -27,7 +30,11 @@ public class PlaneTypePersistenceRepository implements PlaneTypeRepository {
 
     @Override
     public List<PlaneType> findAll() {
-        return em.createQuery("select p from PlaneType p", PlaneType.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<PlaneType> query = cb.createQuery(PlaneType.class);
+        Root<PlaneType> root = query.from(PlaneType.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override

@@ -4,6 +4,9 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.example.pilot.entity.Pilot;
 import org.example.pilot.repository.api.PilotRepository;
 
@@ -24,9 +27,12 @@ public class PilotPersistenceRepository implements PilotRepository {
     @Override
     public Optional<Pilot> findByPilotName(String pilotName) {
         try {
-            return Optional.of(em.createQuery("select p from Pilot p where p.pilotName = :pilotName", Pilot.class)
-                    .setParameter("pilotName", pilotName)
-                    .getSingleResult());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Pilot> query = cb.createQuery(Pilot.class);
+            Root<Pilot> root = query.from(Pilot.class);
+            query.select(root)
+                .where(cb.equal(root.get("pilotName"), pilotName));
+            return Optional.of(em.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -35,9 +41,12 @@ public class PilotPersistenceRepository implements PilotRepository {
     @Override
     public Optional<Pilot> findByLogin(String login) {
         try {
-            return Optional.of(em.createQuery("select p from Pilot p where p.login = :login", Pilot.class)
-                    .setParameter("login", login)
-                    .getSingleResult());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Pilot> query = cb.createQuery(Pilot.class);
+            Root<Pilot> root = query.from(Pilot.class);
+            query.select(root)
+                .where(cb.equal(root.get("login"), login));
+            return Optional.of(em.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -50,7 +59,11 @@ public class PilotPersistenceRepository implements PilotRepository {
 
     @Override
     public List<Pilot> findAll() {
-        return em.createQuery("select p from Pilot p", Pilot.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Pilot> query = cb.createQuery(Pilot.class);
+        Root<Pilot> root = query.from(Pilot.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
