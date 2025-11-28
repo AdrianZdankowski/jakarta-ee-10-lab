@@ -15,6 +15,9 @@ public class UpdateAirplaneWIthModelFunction implements BiFunction<Airplane, Air
                 .yearOfProduction(request.getYearOfProduction())
                 .flightHours(request.getFlightHours())
                 .planeType(entity.getPlaneType())
+                .pilot(entity.getPilot())
+                .version(request.getVersion())
+                .creationDateTime(entity.getCreationDateTime())
                 .build();
     }
 }

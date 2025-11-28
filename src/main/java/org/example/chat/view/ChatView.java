@@ -18,8 +18,7 @@ import java.util.logging.Level;
 @RequestScoped
 @NoArgsConstructor(force = true)
 public class ChatView {
-
-
+    
     private final ChatService chatService;
 
     private PilotService pilotService;

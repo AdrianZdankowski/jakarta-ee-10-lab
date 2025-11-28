@@ -36,6 +36,26 @@
                 </h:column>
 
                 <h:column>
+                    <f:facet name="header">Wersja</f:facet>
+                    <h:outputText value="#{airplane.version}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Data utworzenia</f:facet>
+                    <h:outputText value="#{airplane.creationDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Data modyfikacji</f:facet>
+                    <h:outputText value="#{airplane.modificationDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                    </h:outputText>
+                </h:column>
+
+
+                <h:column>
                     <f:facet name="header">#{airplaneMessages['planetype.view.airplanes.column.view']}</f:facet>
                     <h:link value="#{airplaneMessages['planetype.view.airplanes.action.view']}" outcome="/airplane/airplane_view.xhtml">
                         <f:param name="id" value="#{airplane.id}" />

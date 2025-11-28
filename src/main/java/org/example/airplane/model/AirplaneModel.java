@@ -3,6 +3,7 @@ package org.example.airplane.model;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Getter
 @Setter
@@ -17,4 +18,7 @@ public class AirplaneModel implements Serializable {
     private int yearOfProduction;
     private int flightHours;
     private String planeType;
+    private Long version;
+    private LocalDateTime creationDateTime;
+    private LocalDateTime modificationDateTime;
 }

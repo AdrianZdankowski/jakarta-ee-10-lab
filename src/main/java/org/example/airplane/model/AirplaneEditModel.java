@@ -15,4 +15,5 @@ public class AirplaneEditModel {
     private String name;
     private int yearOfProduction;
     private int flightHours;
+    private Long version;
 }

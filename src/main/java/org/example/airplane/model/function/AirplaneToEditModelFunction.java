@@ -14,6 +14,7 @@ public class AirplaneToEditModelFunction implements Function<Airplane, AirplaneE
                 .name(entity.getName())
                 .yearOfProduction(entity.getYearOfProduction())
                 .flightHours(entity.getFlightHours())
+                .version(entity.getVersion())
                 .build();
     }
 }

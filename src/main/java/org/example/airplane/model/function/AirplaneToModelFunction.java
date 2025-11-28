@@ -16,6 +16,9 @@ public class AirplaneToModelFunction implements Function<Airplane, AirplaneModel
                 .yearOfProduction(entity.getYearOfProduction())
                 .flightHours(entity.getFlightHours())
                 .planeType(entity.getPlaneType() != null ? entity.getPlaneType().getName() : null)
+                .version(entity.getVersion())
+                .creationDateTime(entity.getCreationDateTime())
+                .modificationDateTime(entity.getModificationDateTime())
                 .build();
     }
 }
