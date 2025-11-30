@@ -10,6 +10,7 @@
         <feature>enterpriseBeans-4.0</feature>
         <feature>appSecurity-5.0</feature>
         <feature>websocket-2.1</feature>
+        <feature>beanValidation-3.0</feature>
     </featureManager>
 
     <application type="war" location="aviation-1.0-SNAPSHOT.war">
@@ -37,9 +38,9 @@
     </library>
 
     <logging consoleLogLevel="INFO"/>
-    <logging traceSpecification="eclipselink.sql=all"
-             traceFileName="stdout"
-             traceFormat="BASIC"/>
+<!--    <logging traceSpecification="eclipselink.sql=all"-->
+<!--             traceFileName="stdout"-->
+<!--             traceFormat="BASIC"/>-->
 
     <basicRegistry id="basic" realm="BasicRealm">
         <user name="admin-service" password="adminadmin" />

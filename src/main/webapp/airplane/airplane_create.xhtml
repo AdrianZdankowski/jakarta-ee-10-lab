@@ -20,12 +20,15 @@
 
                     <h:outputLabel for="name" value="#{airplaneMessages['airplane.create.label.name']}"/>
                     <h:inputText id="name" value="#{airplaneCreate.airplane.name}" required="true"/>
+                    
 
                     <h:outputLabel for="year" value="#{airplaneMessages['airplane.create.label.year']}"/>
                     <h:inputText id="year" value="#{airplaneCreate.airplane.yearOfProduction}" required="true"/>
+                    
 
                     <h:outputLabel for="hours" value="#{airplaneMessages['airplane.create.label.hours']}"/>
                     <h:inputText id="hours" value="#{airplaneCreate.airplane.flightHours}" required="true"/>
+                    
 
                     <h:outputLabel for="type" value="#{airplaneMessages['airplane.create.label.type']}"/>
                     <h:selectOneMenu id="type"
@@ -37,6 +40,7 @@
                                        itemLabel="#{type.name}"
                                        itemValue="#{type}"/>
                     </h:selectOneMenu>
+            
 
                 </h:panelGrid>
 
