@@ -15,32 +15,32 @@
             <header><h2>#{airplaneMessages['airplane.create.title']}</h2></header>
 
             <h:form styleClass="form">
-
-                <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
+                <h:messages globalOnly="true" errorClass="error-message" infoClass="info-message" />
+                <h:panelGrid columns="3" columnClasses="label,value" cellpadding="5">
 
                     <h:outputLabel for="name" value="#{airplaneMessages['airplane.create.label.name']}"/>
-                    <h:inputText id="name" value="#{airplaneCreate.airplane.name}" required="true"/>
-                    
+                    <h:inputText id="name" value="#{airplaneCreate.airplane.name}" />
+                    <h:message for="name" errorClass="error-message" />
 
                     <h:outputLabel for="year" value="#{airplaneMessages['airplane.create.label.year']}"/>
-                    <h:inputText id="year" value="#{airplaneCreate.airplane.yearOfProduction}" required="true"/>
-                    
+                    <h:inputText id="year" value="#{airplaneCreate.airplane.yearOfProduction}" />
+                    <h:message for="year" errorClass="error-message" />
 
                     <h:outputLabel for="hours" value="#{airplaneMessages['airplane.create.label.hours']}"/>
-                    <h:inputText id="hours" value="#{airplaneCreate.airplane.flightHours}" required="true"/>
-                    
+                    <h:inputText id="hours" value="#{airplaneCreate.airplane.flightHours}" />
+                    <h:message for="hours" errorClass="error-message" />
 
                     <h:outputLabel for="type" value="#{airplaneMessages['airplane.create.label.type']}"/>
                     <h:selectOneMenu id="type"
                                      value="#{airplaneCreate.airplane.planeType}"
-                                     required="true">
+                                     >
                         <f:selectItem itemLabel="#{airplaneMessages['airplane.create.select.placeholder']}" itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{airplaneCreate.planeTypes}"
                                        var="type"
                                        itemLabel="#{type.name}"
                                        itemValue="#{type}"/>
                     </h:selectOneMenu>
-            
+                    <h:message for="type" errorClass="error-message" />
 
                 </h:panelGrid>
 

@@ -21,14 +21,14 @@ public class AirplaneCreateModel {
     @ValidAirplaneName
     private String name;
 
-    @Min(1914)
-    @Max(2025)
+    @Min(value = 1914, message = "Rok produkcji musi być większy lub równy 1914")
+    @Max(value = 2025, message = "Rok produkcji musi być mniejszy lub równy 2025")
     private int yearOfProduction;
 
     @NotNull
-    @Min(0)
+    @Min(value = 0, message = "Godziny lotu muszą być większe lub równe 0")
     private int flightHours;
 
-    @NotNull
+    @NotNull(message = "Typ samolotu musi być wybrany")
     private PlaneTypeModel planeType;
 }

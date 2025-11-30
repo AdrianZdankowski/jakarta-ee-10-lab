@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = AirplaneNameValidator.class)
 @Documented
 public @interface ValidAirplaneName {
-    String message() default "Airplane name must start with a letter, be all capital, and contain dash followed by numbers (e.g., SU-57)";
+    String message() default "Nazwa samolotu musi zaczynać się od litery, być pisana wielkimi literami i zawierać myślnik, po którym następują cyfry (np. SU-57)";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
