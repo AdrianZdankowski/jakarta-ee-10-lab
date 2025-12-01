@@ -129,7 +129,7 @@ public class InitializedData {
 
             Airplane f16 = Airplane.builder()
                     .id(UUID.fromString("59934c21-368b-48fc-905a-2f34575fdff1"))
-                    .name("F-16 Fighting Falcon")
+                    .name("F-16 FIGHTING FALCON")
                     .yearOfProduction(2022)
                     .flightHours(1245)
                     .planeType(fighterAircraft)
@@ -138,7 +138,7 @@ public class InitializedData {
 
             Airplane f35 = Airplane.builder()
                     .id(UUID.fromString("78fa23b8-152d-47a1-aa8e-d11aa412aa64"))
-                    .name("F-35 Lightning II")
+                    .name("F-35 LIGHTNING II")
                     .yearOfProduction(2024)
                     .flightHours(600)
                     .planeType(fighterAircraft)
@@ -147,7 +147,7 @@ public class InitializedData {
 
             Airplane dreamliner = Airplane.builder()
                     .id(UUID.fromString("366830cd-ecb5-4bc6-9d55-60a06a13994f"))
-                    .name("Boeing 787")
+                    .name("BOEING-787")
                     .yearOfProduction(2018)
                     .flightHours(12415)
                     .planeType(passengerAircraft)
@@ -156,7 +156,7 @@ public class InitializedData {
 
             Airplane airbus = Airplane.builder()
                     .id(UUID.fromString("6fd80b80-00d9-42c9-9888-2b3f168f0dd0"))
-                    .name("Airbus A320")
+                    .name("AIRBUS-A320")
                     .yearOfProduction(2010)
                     .flightHours(13015)
                     .planeType(passengerAircraft)
@@ -165,7 +165,7 @@ public class InitializedData {
 
             Airplane c130 = Airplane.builder()
                     .id(UUID.fromString("681bc221-0a21-4f3e-a726-6cebac04b210"))
-                    .name("C-130 Hercules")
+                    .name("C-130 HERCULES")
                     .yearOfProduction(1995)
                     .flightHours(24542)
                     .planeType(transportAircraft)

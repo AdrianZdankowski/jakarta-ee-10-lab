@@ -78,7 +78,6 @@ public class AirplaneEdit implements Serializable {
     }
 
     public String saveAction() throws IOException {
-        // Zapisz wprowadzone dane użytkownika przed odświeżeniem
         String userEnteredName = airplane.getName();
         Integer userEnteredYear = airplane.getYearOfProduction();
         Integer userEnteredHours = airplane.getFlightHours();

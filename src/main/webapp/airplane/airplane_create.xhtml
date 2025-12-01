@@ -20,15 +20,15 @@
 
                     <h:outputLabel for="name" value="#{airplaneMessages['airplane.create.label.name']}"/>
                     <h:inputText id="name" value="#{airplaneCreate.airplane.name}" />
-                    <h:message for="name" errorClass="error-message" />
+                    <h:message for="name" styleClass="text-warning d-block mt-1" errorClass="error-message" />
 
                     <h:outputLabel for="year" value="#{airplaneMessages['airplane.create.label.year']}"/>
                     <h:inputText id="year" value="#{airplaneCreate.airplane.yearOfProduction}" />
-                    <h:message for="year" errorClass="error-message" />
+                    <h:message for="year" styleClass="text-warning d-block mt-1" errorClass="error-message" />
 
                     <h:outputLabel for="hours" value="#{airplaneMessages['airplane.create.label.hours']}"/>
                     <h:inputText id="hours" value="#{airplaneCreate.airplane.flightHours}" />
-                    <h:message for="hours" errorClass="error-message" />
+                    <h:message for="hours" styleClass="text-warning d-block mt-1" errorClass="error-message" />
 
                     <h:outputLabel for="type" value="#{airplaneMessages['airplane.create.label.type']}"/>
                     <h:selectOneMenu id="type"
@@ -40,7 +40,7 @@
                                        itemLabel="#{type.name}"
                                        itemValue="#{type}"/>
                     </h:selectOneMenu>
-                    <h:message for="type" errorClass="error-message" />
+                    <h:message for="type" styleClass="text-warning d-block mt-1" errorClass="error-message" />
 
                 </h:panelGrid>
 
